@@ -116,6 +116,7 @@
   .stat-card {
     background: var(--surface);
     border: 1px solid var(--border);
+    border-top: 2px solid var(--lions-blue);
     border-radius: 8px;
     padding: 12px 20px;
     text-align: center;
@@ -580,6 +581,36 @@
 
   .nav-bar a:hover { border-color: var(--accent); background: var(--accent-dim); }
 
+  /* Lion Badge */
+  .lion-badge {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0076B6 0%, #004d80 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2.5px solid var(--lions-silver);
+    box-shadow: 0 0 20px rgba(0,118,182,0.35), inset 0 0 12px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  /* Background watermark lion */
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -60px;
+    right: -60px;
+    width: 400px;
+    height: 400px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none'%3E%3Cpath d='M60 12c-22 0-38 18-38 40 0 10 4 20 12 27l2 2-4 13h56l-4-13 2-2c8-7 12-17 12-27 0-22-16-40-38-40z' fill='%230076B6' opacity='0.35'/%3E%3Cellipse cx='60' cy='58' rx='28' ry='30' fill='%230076B6'/%3E%3Cpath d='M30 36c-2-10 4-18 12-16 2 0 3 2 2 4l-6 14z' fill='%230076B6'/%3E%3Cpath d='M90 36c2-10-4-18-12-16-2 0-3 2-2 4l6 14z' fill='%230076B6'/%3E%3Cpath d='M38 24l-4-10c0-2 2-3 3-2l6 8z' fill='%230076B6' opacity='0.7'/%3E%3Cpath d='M50 18l-1-12c0-2 2-3 3-1l3 10z' fill='%230076B6' opacity='0.6'/%3E%3Cpath d='M60 15l0-11c0-2 2-2 3 0l0 11z' fill='%230076B6' opacity='0.8'/%3E%3Cpath d='M70 18l1-12c0-2-2-3-3-1l-3 10z' fill='%230076B6' opacity='0.6'/%3E%3Cpath d='M82 24l4-10c0-2-2-3-3-2l-6 8z' fill='%230076B6' opacity='0.7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   /* Draft Order Editor */
   .order-row {
     display: grid;
@@ -639,11 +670,38 @@
 
 <div class="header">
   <div class="header-left">
-    <div style="display:flex;align-items:center;gap:14px">
-      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0076B6,#005a8c);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid var(--lions-silver);box-shadow:0 0 16px rgba(0,118,182,0.3)">&#129409;</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="lion-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" width="56" height="56">
+          <path d="M60 12c-22 0-38 18-38 40 0 10 4 20 12 27l2 2-4 13h56l-4-13 2-2c8-7 12-17 12-27 0-22-16-40-38-40z" fill="#0076B6" opacity="0.35"/>
+          <ellipse cx="60" cy="58" rx="28" ry="30" fill="#0076B6"/>
+          <ellipse cx="60" cy="60" rx="22" ry="24" fill="#B0B7BC" opacity="0.15"/>
+          <ellipse cx="48" cy="50" rx="5" ry="5.5" fill="#fff"/>
+          <ellipse cx="72" cy="50" rx="5" ry="5.5" fill="#fff"/>
+          <ellipse cx="49" cy="50" rx="2.8" ry="3.2" fill="#041E42"/>
+          <ellipse cx="73" cy="50" rx="2.8" ry="3.2" fill="#041E42"/>
+          <circle cx="50" cy="48.5" r="1" fill="#fff" opacity="0.8"/>
+          <circle cx="74" cy="48.5" r="1" fill="#fff" opacity="0.8"/>
+          <path d="M40 44c2-4 6-6 10-5" stroke="#004d80" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M80 44c-2-4-6-6-10-5" stroke="#004d80" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M54 62c2 3 4 5 6 5s4-2 6-5c-2-1-4-2-6-2s-4 1-6 2z" fill="#041E42"/>
+          <path d="M48 70c4 4 8 5 12 5s8-1 12-5" stroke="#004d80" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="42" cy="64" r="1.2" fill="#B0B7BC" opacity="0.4"/>
+          <circle cx="38" cy="62" r="1.2" fill="#B0B7BC" opacity="0.3"/>
+          <circle cx="78" cy="64" r="1.2" fill="#B0B7BC" opacity="0.4"/>
+          <circle cx="82" cy="62" r="1.2" fill="#B0B7BC" opacity="0.3"/>
+          <path d="M30 36c-2-10 4-18 12-16 2 0 3 2 2 4l-6 14z" fill="#0076B6"/>
+          <path d="M90 36c2-10-4-18-12-16-2 0-3 2-2 4l6 14z" fill="#0076B6"/>
+          <path d="M38 24l-4-10c0-2 2-3 3-2l6 8z" fill="#0076B6" opacity="0.7"/>
+          <path d="M50 18l-1-12c0-2 2-3 3-1l3 10z" fill="#0076B6" opacity="0.6"/>
+          <path d="M60 15l0-11c0-2 2-2 3 0l0 11z" fill="#0076B6" opacity="0.8"/>
+          <path d="M70 18l1-12c0-2-2-3-3-1l-3 10z" fill="#0076B6" opacity="0.6"/>
+          <path d="M82 24l4-10c0-2-2-3-3-2l-6 8z" fill="#0076B6" opacity="0.7"/>
+        </svg>
+      </div>
       <div>
         <h1><span>Dan's Picks</span> Studio</h1>
-        <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis &middot; April 23, Pittsburgh &middot; <span style="color:var(--lions-blue);font-weight:600">&#128153; Lions Fan Edition</span></div>
+        <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis &middot; April 23, Pittsburgh &middot; <span style="color:var(--lions-blue);font-weight:600">Lions Fan Edition</span></div>
       </div>
     </div>
   </div>
