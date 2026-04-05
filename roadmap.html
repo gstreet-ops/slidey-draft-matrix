@@ -7,25 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e17;
-    --surface: #111827;
-    --surface-hover: #1a2332;
-    --border: #1e293b;
-    --border-accent: #334155;
-    --text: #e2e8f0;
-    --text-dim: #94a3b8;
-    --text-muted: #64748b;
-    --accent: #22d3ee;
-    --accent-dim: rgba(34,211,238,0.12);
+    /* Georgetown University Theme — Navy & Gray */
+    --bg: #060a14;
+    --surface: #0c1322;
+    --surface-hover: #111c33;
+    --border: #1a2742;
+    --border-accent: #253a5c;
+    --text: #e4e8ef;
+    --text-dim: #98a4b8;
+    --text-muted: #6a7891;
+    --accent: #8D817B;
+    --accent-dim: rgba(141,129,123,0.12);
     --green: #34d399;
     --green-bg: rgba(52,211,153,0.12);
     --yellow: #fbbf24;
     --yellow-bg: rgba(251,191,36,0.10);
     --orange: #fb923c;
-    --slidey: #f97316;
-    --slidey-dim: rgba(249,115,22,0.12);
+    --slidey: #4A7AB5;
+    --slidey-dim: rgba(4,30,66,0.20);
     --purple: #a78bfa;
     --purple-bg: rgba(167,139,250,0.10);
+    --gtown-navy: #041E42;
+    --gtown-gray: #8D817B;
+    --gtown-accent: #5B6B80;
+    --gtown-highlight: #4A7AB5;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,6 +41,7 @@
     font-family: 'IBM Plex Sans', sans-serif;
     line-height: 1.5;
     min-height: 100vh;
+    border-top: 4px solid var(--gtown-navy);
   }
 
   .header {
@@ -362,8 +368,8 @@
 <body>
 
 <div class="header">
-  <div class="header-eyebrow">Globe Street Tech — Product Roadmap</div>
-  <h1><span>Slidey.com Draft</span><br>Feature Roadmap</h1>
+  <div class="header-eyebrow" style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">&#9876;</span> Globe Street Tech — Product Roadmap</div>
+  <h1><span style="color:var(--gtown-highlight)">Slidey.com Draft</span><br>Feature Roadmap</h1>
   <p class="header-sub">Everything we're building, organized by phase. Phase 1 ships first. Features can shift between phases as priorities evolve.</p>
   <div class="header-links">
     <a href="index.html">View Competitive Matrix</a>

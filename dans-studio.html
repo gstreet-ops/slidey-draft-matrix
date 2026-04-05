@@ -7,26 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e17;
-    --surface: #111827;
-    --surface-hover: #1a2332;
-    --border: #1e293b;
-    --border-accent: #334155;
-    --text: #e2e8f0;
-    --text-dim: #94a3b8;
-    --text-muted: #64748b;
-    --accent: #22d3ee;
-    --accent-dim: rgba(34,211,238,0.12);
+    /* Detroit Lions Theme — Honolulu Blue & Silver */
+    --bg: #0a0f1a;
+    --surface: #0d1525;
+    --surface-hover: #132038;
+    --border: #1a2a45;
+    --border-accent: #264060;
+    --text: #e8ecf2;
+    --text-dim: #a0b0c4;
+    --text-muted: #6b7f99;
+    --accent: #B0B7BC;
+    --accent-dim: rgba(176,183,188,0.12);
     --green: #34d399;
     --green-bg: rgba(52,211,153,0.12);
     --yellow: #fbbf24;
     --yellow-bg: rgba(251,191,36,0.10);
     --red: #f87171;
     --red-bg: rgba(248,113,113,0.08);
-    --slidey: #f97316;
-    --slidey-dim: rgba(249,115,22,0.12);
+    --slidey: #0076B6;
+    --slidey-dim: rgba(0,118,182,0.15);
     --purple: #a78bfa;
     --purple-bg: rgba(167,139,250,0.10);
+    --lions-blue: #0076B6;
+    --lions-silver: #B0B7BC;
+    --lions-black: #000000;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,6 +41,7 @@
     font-family: 'IBM Plex Sans', sans-serif;
     line-height: 1.5;
     min-height: 100vh;
+    border-top: 4px solid var(--lions-blue);
   }
 
   /* Header */
@@ -634,8 +639,13 @@
 
 <div class="header">
   <div class="header-left">
-    <h1><span>Dan's Picks</span> Studio</h1>
-    <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis &middot; April 23, Pittsburgh</div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0076B6,#005a8c);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid var(--lions-silver);box-shadow:0 0 16px rgba(0,118,182,0.3)">&#129409;</div>
+      <div>
+        <h1><span>Dan's Picks</span> Studio</h1>
+        <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis &middot; April 23, Pittsburgh &middot; <span style="color:var(--lions-blue);font-weight:600">&#128153; Lions Fan Edition</span></div>
+      </div>
+    </div>
   </div>
   <div class="header-right">
     <span class="status-badge status-draft" id="statusBadge">Draft</span>
