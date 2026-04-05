@@ -590,7 +590,7 @@
 <div class="header">
   <div class="header-left">
     <h1><span>Dan's Picks</span> Studio</h1>
-    <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis</div>
+    <div class="subtitle">2026 NFL Draft &mdash; Round 1 Mock &amp; Analysis &middot; April 23, Pittsburgh</div>
   </div>
   <div class="header-right">
     <span class="status-badge status-draft" id="statusBadge">Draft</span>
@@ -674,15 +674,41 @@ const livePosts = [];
 let currentPostType = 'take';
 
 // Sample 2026 Round 1 order (pre-trades)
+// 2026 NFL Draft Round 1 order (post-trades, as of April 2026)
+// Note: ATL, GB, JAX, IND traded away their 1st-round picks
 const round1Teams = [
-  "Cleveland Browns","New York Giants","Tennessee Titans","New England Patriots",
-  "Jacksonville Jaguars","Las Vegas Raiders","New York Jets","Carolina Panthers",
-  "New Orleans Saints","Chicago Bears","San Francisco 49ers","Dallas Cowboys",
-  "Miami Dolphins","Indianapolis Colts","Cincinnati Bengals","Arizona Cardinals",
-  "Seattle Seahawks","Tampa Bay Buccaneers","Atlanta Falcons","Denver Broncos",
-  "Los Angeles Chargers","Pittsburgh Steelers","Green Bay Packers","Minnesota Vikings",
-  "Houston Texans","Los Angeles Rams","Baltimore Ravens","Buffalo Bills",
-  "Detroit Lions","Philadelphia Eagles","Washington Commanders","Kansas City Chiefs"
+  "Las Vegas Raiders",           // 1
+  "New York Jets",               // 2
+  "Arizona Cardinals",           // 3
+  "Tennessee Titans",            // 4
+  "New York Giants",             // 5
+  "Cleveland Browns",            // 6
+  "Washington Commanders",       // 7
+  "New Orleans Saints",          // 8
+  "Kansas City Chiefs",          // 9
+  "Cincinnati Bengals",          // 10
+  "Miami Dolphins",              // 11
+  "Dallas Cowboys",              // 12
+  "Los Angeles Rams",            // 13 (from ATL)
+  "Baltimore Ravens",            // 14
+  "Tampa Bay Buccaneers",        // 15
+  "New York Jets",               // 16 (from IND)
+  "Detroit Lions",               // 17
+  "Minnesota Vikings",           // 18
+  "Carolina Panthers",           // 19
+  "Dallas Cowboys",              // 20 (from GB)
+  "Pittsburgh Steelers",         // 21
+  "Los Angeles Chargers",        // 22
+  "Philadelphia Eagles",         // 23
+  "Cleveland Browns",            // 24 (from JAX)
+  "Chicago Bears",               // 25
+  "Buffalo Bills",               // 26
+  "San Francisco 49ers",         // 27
+  "Houston Texans",              // 28
+  "Kansas City Chiefs",          // 29 (from LAR)
+  "Miami Dolphins",              // 30 (from DEN)
+  "New England Patriots",        // 31
+  "Seattle Seahawks"             // 32
 ];
 
 for (let i = 0; i < 32; i++) {
