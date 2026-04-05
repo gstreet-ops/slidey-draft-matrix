@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slidey.com Draft — Competitive Feature Matrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface-hover: #1a2332;
+    --border: #1e293b;
+    --border-accent: #334155;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #22d3ee;
+    --accent-dim: rgba(34,211,238,0.12);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.10);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.08);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.10);
+    --orange: #fb923c;
+    --slidey: #f97316;
+    --slidey-dim: rgba(249,115,22,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 48px 32px 32px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .header-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: 1px;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .header h1 span { color: var(--slidey); }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 750px;
+    margin-bottom: 24px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 0 32px 24px;
+    max-width: 1500px;
+    margin: 0 auto;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 32px 24px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .filter-btn.slidey-filter.active {
+    background: var(--slidey-dim);
+    border-color: var(--slidey);
+    color: var(--slidey);
+  }
+
+  .filter-btn.slidey-filter:hover {
+    border-color: var(--slidey);
+    color: var(--slidey);
+  }
+
+  .table-wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    min-width: 1200px;
+  }
+
+  th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--bg);
+    min-width: 220px;
+    max-width: 260px;
+  }
+
+  thead th:first-child { z-index: 20; }
+
+  thead th {
+    background: var(--surface);
+    padding: 14px 12px 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    border-bottom: 2px solid var(--accent);
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  thead th:first-child { text-align: left; background: var(--surface); }
+
+  thead th.slidey-col {
+    background: linear-gradient(180deg, rgba(249,115,22,0.15), var(--surface));
+    color: var(--slidey);
+    border-bottom: 2px solid var(--slidey);
+  }
+
+  td.slidey-col { background: rgba(249,115,22,0.04) !important; }
+
+  thead th.highlight {
+    background: linear-gradient(180deg, rgba(34,211,238,0.08), var(--surface));
+    color: var(--accent);
+  }
+
+  td.highlight { background: rgba(34,211,238,0.03) !important; }
+
+  .app-name { font-weight: 700; font-size: 11px; line-height: 1.3; }
+
+  .app-name small {
+    display: block;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  .cat-row td {
+    background: var(--surface) !important;
+    padding: 10px 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    border-top: 1px solid var(--border-accent);
+  }
+
+  .cat-row-slidey td {
+    background: var(--surface) !important;
+    padding: 10px 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--slidey);
+    border-top: 2px solid rgba(249,115,22,0.4);
+  }
+
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover td { background: var(--surface-hover); }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+    color: var(--text-dim);
+  }
+
+  td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .feature-note {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .yes { color: var(--green); font-weight: 700; font-size: 15px; }
+  .partial { color: var(--yellow); font-weight: 600; font-size: 12px; }
+  .no { color: var(--text-muted); font-size: 13px; }
+  .paid { color: var(--purple); font-weight: 600; font-size: 11px; }
+  .unique { color: var(--orange); font-weight: 600; font-size: 11px; }
+  .planned { color: var(--slidey); font-weight: 700; font-size: 11px; }
+
+  .summary {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+  }
+
+  .summary h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .summary-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .summary-card.slidey-card { border-color: rgba(249,115,22,0.3); }
+  .summary-card.slidey-card h3 { color: var(--slidey); }
+
+  .summary-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+  .summary-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+  }
+
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .tag-red { background: var(--red-bg); color: var(--red); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-orange { background: var(--slidey-dim); color: var(--slidey); }
+
+  @media (max-width: 768px) {
+    .header, .filters, .table-wrap, .legend, .summary { padding-left: 16px; padding-right: 16px; }
+    th:first-child, td:first-child { min-width: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Globe Street Tech — Product Research</div>
+  <h1><span>Slidey.com Draft</span><br>Competitive Feature Matrix</h1>
+  <p class="header-sub">Mapping Slidey.com Draft's planned feature set against 8 existing platforms. The orange column shows what we're building — including the exclusive Dan's Picks analyst prediction tracker.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Full feature</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Partial / limited</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div> Not available</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Paid / premium only</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> Unique differentiator</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--slidey)"></div> Slidey.com planned</div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterRows('all')">All Features</button>
+  <button class="filter-btn" onclick="filterRows('social')">Social & Compete</button>
+  <button class="filter-btn" onclick="filterRows('prediction')">Prediction & Scoring</button>
+  <button class="filter-btn slidey-filter" onclick="filterRows('dans')">Dan's Picks</button>
+  <button class="filter-btn" onclick="filterRows('sim')">Simulator & GM</button>
+  <button class="filter-btn" onclick="filterRows('content')">Content & Intel</button>
+  <button class="filter-btn" onclick="filterRows('ux')">UX & Platform</button>
+</div>
+
+<div class="table-wrap">
+<table id="matrix">
+<thead>
+  <tr>
+    <th>Feature</th>
+    <th class="slidey-col">
+      <div class="app-name">Slidey.com Draft<small>slidey.com</small></div>
+    </th>
+    <th class="highlight">
+      <div class="app-name">AIMockDraft<small>aimockdraft.com</small></div>
+    </th>
+    <th><div class="app-name">MockOut<small>iOS App</small></div></th>
+    <th><div class="app-name">Draft Labs<small>draftlabs.ai</small></div></th>
+    <th><div class="app-name">OfficePoolStop<small>officepoolstop.com</small></div></th>
+    <th><div class="app-name">PFF<small>pff.com</small></div></th>
+    <th><div class="app-name">Pro Football Network<small>profootballnetwork.com</small></div></th>
+    <th><div class="app-name">StickToTheModel<small>sticktothemodel.com</small></div></th>
+    <th><div class="app-name">ESPN<small>espn.com</small></div></th>
+  </tr>
+</thead>
+<tbody>
+
+  <!-- SOCIAL & COMPETE -->
+  <tr class="cat-row"><td colspan="10" data-cat="social">Social & Compete</td></tr>
+  <tr data-cat="social">
+    <td>Private pools / leagues<span class="feature-note">Create a group, invite friends</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Public contests / arena<span class="feature-note">Compete against all users</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Leaderboard</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Leaderboard</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Friend invite system<span class="feature-note">Share code / link to join</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Live multiplayer draft rooms<span class="feature-note">Draft in real-time vs. friends</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="paid">PFF+ only</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Social sharing<span class="feature-note">Share results on X / social</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Discussion / debate boards<span class="feature-note">In-app community talk</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">Debate Room</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Discord</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="social">
+    <td>Entry fee / payout tracking<span class="feature-note">Buy-in pools with ledger</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="partial">$5 challenge</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+  <!-- PREDICTION & SCORING -->
+  <tr class="cat-row"><td colspan="10" data-cat="prediction">Prediction & Scoring</td></tr>
+  <tr data-cat="prediction">
+    <td>Pre-draft mock submission<span class="feature-note">Lock picks before draft day</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Live draft-night scoring<span class="feature-note">Scores update as picks happen</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Tiered scoring system<span class="feature-note">Exact pick > close > round match</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="partial">Basic</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Trade prediction scoring<span class="feature-note">Bonus for predicting trades</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="unique">20pt bonus</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Partial credit</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Multi-round predictions<span class="feature-note">Beyond round 1</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="partial">2 rounds</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="partial">Rd 1 only</span></td>
+    <td><span class="partial">Rd 1 only</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Position rank scoring<span class="feature-note">Points for correct positional order</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Prop-style side bets<span class="feature-note">Over/under, first position off board</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="partial">Props</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="prediction">
+    <td>Historical accuracy tracking<span class="feature-note">Lifetime prediction stats</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="unique">Fandom Profile</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+  <!-- DAN'S PICKS -->
+  <tr class="cat-row-slidey"><td colspan="10" data-cat="dans">Dan's Picks — Analyst Prediction Tracker (Slidey Exclusive)</td></tr>
+  <tr data-cat="dans">
+    <td>Dan's pre-draft predictions<span class="feature-note">Published pick-by-pick mock before draft</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Dan's analysis per pick<span class="feature-note">Written rationale for each selection</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Live accuracy scoreboard<span class="feature-note">Dan's score updates in real-time during draft</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Beat Dan challenge<span class="feature-note">Users compete head-to-head vs. Dan's picks</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Pick-by-pick hit/miss tracker<span class="feature-note">Visual hit/miss as each real pick is announced</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Dan's confidence ratings<span class="feature-note">Lock / likely / sleeper tiers per pick</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Historical year-over-year stats<span class="feature-note">Dan's accuracy across multiple drafts</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="dans">
+    <td>Dan's hot takes / commentary feed<span class="feature-note">Live reactions during the draft</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+  <!-- SIMULATOR & GM -->
+  <tr class="cat-row"><td colspan="10" data-cat="sim">Simulator & GM Mode</td></tr>
+  <tr data-cat="sim">
+    <td>Solo mock draft simulator<span class="feature-note">Draft against AI teams</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>7-round depth<span class="feature-note">All rounds, not just Rd 1</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>Trade engine<span class="feature-note">Trade picks during sim</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>Pick grading (A+ to F)<span class="feature-note">Instant grade per selection</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>Be A GM / offseason mode<span class="feature-note">Salary cap, FA, trades, then draft</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Ultimate GM</span></td>
+    <td><span class="unique">Full GM mode</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>CPU-to-CPU trades<span class="feature-note">AI teams trade with each other</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="sim">
+    <td>Save & revisit drafts<span class="feature-note">Archive completed mocks</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="paid">PFF+</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+  <!-- CONTENT & INTEL -->
+  <tr class="cat-row"><td colspan="10" data-cat="content">Content & Intel</td></tr>
+  <tr data-cat="content">
+    <td>Big Board / prospect rankings<span class="feature-note">300+ ranked prospects</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="partial">In-app pool</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="paid">PFF+</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Scouting reports<span class="feature-note">Strengths, weaknesses, comp</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">AI-powered</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Basic</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="paid">PFF+</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Team needs / intel pages<span class="feature-note">32-team breakdown</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Beat writer / insider intel<span class="feature-note">Aggregated reporter news</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">192 writers</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Reporter accountability cards<span class="feature-note">Grade media accuracy</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Combine / measurables data<span class="feature-note">40 time, bench, vert, etc.</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="content">
+    <td>Mock draft aggregator<span class="feature-note">Consensus from many experts</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Multi-source lists</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+  <!-- UX & PLATFORM -->
+  <tr class="cat-row"><td colspan="10" data-cat="ux">UX & Platform</td></tr>
+  <tr data-cat="ux">
+    <td>Free (no paywall)<span class="feature-note">Core features without paying</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="partial">Beta / invite</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="partial">Sim free, intel paid</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="partial">ESPN+ for some</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>Native mobile app<span class="feature-note">iOS / Android</span></td>
+    <td class="slidey-col"><span class="partial">Web (PWA)</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>No account required<span class="feature-note">Use without sign-up</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Sim only</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>Live draft tracker<span class="feature-note">Real-time pick feed on draft night</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>AI-powered features<span class="feature-note">AI suggestions, analysis, reports</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">Core platform</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">VOR engine</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Analytics</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Predictor model</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>Printable pick sheets<span class="feature-note">PDF / CSV export</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>Community feedback / voting<span class="feature-note">Users vote on features</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="unique">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+  <tr data-cat="ux">
+    <td>NBA draft support<span class="feature-note">Beyond NFL</span></td>
+    <td class="slidey-col"><span class="no">&mdash;</span></td>
+    <td class="highlight"><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="no">&mdash;</span></td>
+  </tr>
+
+</tbody>
+</table>
+</div>
+
+<div class="summary">
+  <h2>Key Takeaways for Slidey.com Draft</h2>
+  <div class="summary-grid">
+
+    <div class="summary-card slidey-card">
+      <h3>Dan's Picks — The Exclusive Edge</h3>
+      <p>No competitor offers a built-in analyst prediction tracker with live scoring. Dan's Picks gives Slidey a content moat: users follow Dan's analysis pre-draft, then watch his accuracy unfold in real-time on draft night. The "Beat Dan" challenge turns passive readers into engaged competitors.</p>
+      <span class="tag tag-orange">Exclusive</span>
+      <span class="tag tag-orange">Content moat</span>
+      <span class="tag tag-orange">Engagement driver</span>
+    </div>
+
+    <div class="summary-card">
+      <h3>The Gap to Own</h3>
+      <p>No app nails the full friend-vs-friend draft night experience. MockOut is closest on mobile, AIMockDraft has the broadest feature set, but neither combines private pools + rich scoring + live draft tracking + analyst content seamlessly. This is Slidey's lane.</p>
+      <span class="tag tag-green">Opportunity</span>
+    </div>
+
+    <div class="summary-card">
+      <h3>Must-Have Features (MVP)</h3>
+      <p>Private pools with invite codes, pre-draft mock submission with lock deadline, tiered scoring engine, live draft-night scoreboard, Dan's Picks analyst tracker, and social sharing of results.</p>
+      <span class="tag tag-green">Pool system</span>
+      <span class="tag tag-green">Scoring engine</span>
+      <span class="tag tag-green">Live tracker</span>
+      <span class="tag tag-orange">Dan's Picks</span>
+    </div>
+
+    <div class="summary-card">
+      <h3>Differentiators to Consider</h3>
+      <p>Trade prediction bonuses (MockOut's 20pt bonus is compelling), prop-style side bets, position-rank scoring (nobody does this well), and year-over-year accuracy profiles for both users and Dan.</p>
+      <span class="tag tag-yellow">Trade bonuses</span>
+      <span class="tag tag-yellow">Prop bets</span>
+      <span class="tag tag-purple">Accuracy profile</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function filterRows(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('tbody tr').forEach(row => {
+    if (cat === 'all') {
+      row.style.display = '';
+      return;
+    }
+    const rowCat = row.dataset.cat || row.querySelector('td[data-cat]')?.dataset.cat;
+    row.style.display = (rowCat === cat) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
