@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slidey.com Draft — Feature Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface-hover: #1a2332;
+    --border: #1e293b;
+    --border-accent: #334155;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #22d3ee;
+    --accent-dim: rgba(34,211,238,0.12);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.10);
+    --orange: #fb923c;
+    --slidey: #f97316;
+    --slidey-dim: rgba(249,115,22,0.12);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 48px 32px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 52px);
+    letter-spacing: 1px;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .header h1 span { color: var(--slidey); }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 700px;
+    margin-bottom: 8px;
+  }
+
+  .header-links {
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .header-links a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(34,211,238,0.3);
+    transition: border-color 0.2s;
+  }
+
+  .header-links a:hover { border-color: var(--accent); }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 32px;
+  }
+
+  .progress-bar-outer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .progress-stats {
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 100px;
+  }
+
+  .progress-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--slidey);
+    line-height: 1;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .progress-bar-track {
+    flex: 1;
+    height: 12px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--slidey), var(--yellow));
+    transition: width 0.6s ease;
+  }
+
+  .progress-breakdown {
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .progress-breakdown .stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-dim);
+  }
+
+  .progress-breakdown .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 32px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Phases */
+  .phases {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+  }
+
+  .phase {
+    margin-bottom: 40px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .phase-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--bg);
+    background: var(--slidey);
+    padding: 2px 10px;
+    border-radius: 4px;
+  }
+
+  .phase-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .phase-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .phase-toggle {
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+
+  .phase.collapsed .phase-toggle { transform: rotate(-90deg); }
+  .phase.collapsed .feature-grid { display: none; }
+
+  /* Feature cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid var(--border);
+  }
+
+  .feature-card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-accent);
+  }
+
+  .feature-card.status-planned { border-left-color: var(--text-muted); }
+  .feature-card.status-in-progress { border-left-color: var(--yellow); }
+  .feature-card.status-complete { border-left-color: var(--green); }
+  .feature-card.status-future { border-left-color: var(--purple); }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .card-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .badge-planned { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+  .badge-in-progress { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-complete { background: var(--green-bg); color: var(--green); }
+  .badge-future { background: var(--purple-bg); color: var(--purple); }
+
+  .card-priority {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .card-priority.high { color: var(--slidey); }
+  .card-priority.medium { color: var(--yellow); }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .feature-card.expanded .card-desc { display: block; }
+
+  .card-expand-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .feature-card.expanded .card-expand-hint { display: none; }
+
+  /* Nav link */
+  .nav-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 48px;
+    text-align: center;
+  }
+
+  .nav-bar a {
+    color: var(--accent);
+    font-size: 14px;
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    padding: 10px 24px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .nav-bar a:hover {
+    background: var(--accent-dim);
+  }
+
+  @media (max-width: 768px) {
+    .header, .filters, .phases, .progress-wrap, .nav-bar { padding-left: 16px; padding-right: 16px; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .progress-bar-outer { flex-direction: column; }
+    .progress-breakdown { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Globe Street Tech — Product Roadmap</div>
+  <h1><span>Slidey.com Draft</span><br>Feature Roadmap</h1>
+  <p class="header-sub">Everything we're building, organized by phase. Phase 1 ships first. Features can shift between phases as priorities evolve.</p>
+  <div class="header-links">
+    <a href="index.html">View Competitive Matrix</a>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-outer">
+    <div class="progress-stats">
+      <div class="progress-number" id="progressPct">0%</div>
+      <div class="progress-label">Complete</div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-breakdown">
+      <div class="stat"><div class="dot" style="background:var(--green)"></div> <span id="countComplete">0</span> Done</div>
+      <div class="stat"><div class="dot" style="background:var(--yellow)"></div> <span id="countProgress">0</span> Building</div>
+      <div class="stat"><div class="dot" style="background:var(--text-muted)"></div> <span id="countPlanned">0</span> Planned</div>
+      <div class="stat"><div class="dot" style="background:var(--purple)"></div> <span id="countFuture">0</span> Future</div>
+    </div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all')">All Features</button>
+  <button class="filter-btn" onclick="filterCards('planned')">Planned</button>
+  <button class="filter-btn" onclick="filterCards('in-progress')">In Progress</button>
+  <button class="filter-btn" onclick="filterCards('complete')">Complete</button>
+  <button class="filter-btn" onclick="filterCards('future')">Future</button>
+</div>
+
+<div class="phases" id="phases"></div>
+
+<div class="nav-bar">
+  <a href="index.html">&larr; Back to Competitive Matrix</a>
+</div>
+
+<script>
+const features = [
+  // ── Phase 1: Draft Night Core ──
+  { id: 1, title: "Private Draft Pools", description: "Create a pool, get a shareable invite code or link, invite your friends. Each pool has its own leaderboard and settings. This is the foundation of the entire social experience.", phase: 1, status: "planned", priority: "high" },
+  { id: 2, title: "Pre-Draft Mock Submission", description: "Lock in your pick-by-pick predictions before the draft starts. Configurable lock deadline (e.g., 30 min before Round 1). Users can edit right up until the deadline.", phase: 1, status: "planned", priority: "high" },
+  { id: 3, title: "Tiered Scoring Engine", description: "Exact player-to-pick match = max points. Player picked within 3 slots = partial. Correct player in correct round = base points. Admin can customize point weights per pool.", phase: 1, status: "planned", priority: "high" },
+  { id: 4, title: "Live Draft-Night Scoreboard", description: "Scores update in real-time as each pick is announced. Leaderboard reshuffles after every pick. Push-style updates without page refresh — the heartbeat of draft night.", phase: 1, status: "planned", priority: "high" },
+  { id: 5, title: "Dan's Pre-Draft Predictions", description: "Dan publishes his pick-by-pick mock with written analysis for each selection. Users can browse his picks, read his reasoning, and see his confidence ratings (Lock / Likely / Sleeper) before the draft.", phase: 1, status: "planned", priority: "high" },
+  { id: 6, title: "Dan's Live Accuracy Tracker", description: "As each real pick is announced, Dan's prediction for that slot is scored in real-time. Visual hit/miss indicators light up green or red. Running accuracy percentage updates live.", phase: 1, status: "planned", priority: "high" },
+  { id: 7, title: "Beat Dan Challenge", description: "Every pool member automatically competes head-to-head against Dan's picks using the same scoring engine. A dedicated 'You vs. Dan' card shows who's winning after each pick.", phase: 1, status: "planned", priority: "high" },
+  { id: 8, title: "User Accounts & Auth", description: "Sign up / sign in with email or Google OAuth. User profile stores pool memberships, prediction history, and lifetime stats. Required for pool participation.", phase: 1, status: "planned", priority: "high" },
+  { id: 9, title: "Social Sharing", description: "Share your pool results, your score vs. Dan, and your final rank on X, iMessage, or any platform. Auto-generated share cards with your stats and pool branding.", phase: 1, status: "planned", priority: "high" },
+
+  // ── Phase 2: Content Platform ──
+  { id: 10, title: "Big Board / Prospect Rankings", description: "300+ prospects ranked with position, school, and projected round. Sortable and filterable by position, school, or projected range. The reference layer for making predictions.", phase: 2, status: "planned", priority: "high" },
+  { id: 11, title: "Scouting Reports", description: "Detailed prospect profiles: strengths, weaknesses, NFL comparison, projected ceiling/floor. Written by Dan and/or aggregated from trusted sources.", phase: 2, status: "planned", priority: "high" },
+  { id: 12, title: "Team Needs & Intel Pages", description: "All 32 teams with current roster needs, cap space, pick inventory, and GM tendencies. Helps users make informed predictions — not just guesses.", phase: 2, status: "planned", priority: "high" },
+  { id: 13, title: "Combine & Measurables Data", description: "40-yard dash, bench press, vertical, broad jump, 3-cone, shuttle — all the combine data in clean sortable tables. Compare prospects side-by-side.", phase: 2, status: "planned", priority: "medium" },
+  { id: 14, title: "Mock Draft Aggregator", description: "Pull in mock drafts from Kiper, McShay, Jeremiah, and other top analysts. Show consensus picks and where analysts diverge. Context for Dan's picks and user predictions.", phase: 2, status: "planned", priority: "medium" },
+  { id: 15, title: "Dan's Analysis Per Pick", description: "Each of Dan's predictions gets a dedicated written breakdown: why this player, why this team, what the alternatives were. The editorial voice that makes Slidey a destination.", phase: 2, status: "planned", priority: "high" },
+  { id: 16, title: "Dan's Hot Takes Feed", description: "Live commentary feed during the draft — Dan's real-time reactions, surprises, and analysis as picks happen. Think live blog meets sports Twitter.", phase: 2, status: "planned", priority: "medium" },
+
+  // ── Phase 3: Simulator & Advanced Scoring ──
+  { id: 17, title: "Solo Mock Draft Simulator", description: "Draft against AI-controlled teams. Pick your team, make selections, see how the board falls. A lightweight sim focused on prediction practice rather than full GM mode.", phase: 3, status: "planned", priority: "medium" },
+  { id: 18, title: "7-Round Draft Depth", description: "Simulator covers all 7 rounds with 300+ prospects. Not just a Round 1 toy — users can practice deep-draft strategy and find sleepers.", phase: 3, status: "planned", priority: "medium" },
+  { id: 19, title: "Trade Engine", description: "Trade picks during the simulation using the Jimmy Johnson draft value chart for fairness. Propose trades, get counter-offers from AI GMs, execute multi-pick deals.", phase: 3, status: "planned", priority: "medium" },
+  { id: 20, title: "Pick Grading (A+ to F)", description: "Every pick in the simulator gets an instant letter grade based on prospect value vs. draft position, team need, and positional scarcity.", phase: 3, status: "planned", priority: "low" },
+  { id: 21, title: "Save & Revisit Drafts", description: "Archive completed mock drafts. Review past predictions, compare against what actually happened, track improvement over time.", phase: 3, status: "planned", priority: "low" },
+  { id: 22, title: "Trade Prediction Scoring", description: "Bonus points for predicting draft-day trades. If you call that Team X trades up to pick #4, you earn trade bonus points in your pool.", phase: 3, status: "planned", priority: "medium" },
+  { id: 23, title: "Prop-Style Side Bets", description: "Fun side predictions within your pool: first RB off the board, over/under on QBs in Round 1, which team trades up first. Extra engagement beyond the main picks.", phase: 3, status: "planned", priority: "medium" },
+  { id: 24, title: "Position Rank Scoring", description: "Points for correctly predicting the order positions come off the board — e.g., 1st WR taken is CeeDee Smith. Nobody does this well yet.", phase: 3, status: "planned", priority: "low" },
+
+  // ── Phase 4: Growth & Intelligence ──
+  { id: 25, title: "Historical Accuracy Tracking", description: "Lifetime prediction stats for every user: accuracy by round, by team, by position. Fandom profile that builds over multiple draft years.", phase: 4, status: "planned", priority: "medium" },
+  { id: 26, title: "Dan's Year-Over-Year Stats", description: "Track Dan's prediction accuracy across multiple drafts. Transparent performance data that builds credibility and engagement.", phase: 4, status: "planned", priority: "medium" },
+  { id: 27, title: "AI-Powered Insights", description: "AI-generated analysis: 'Based on combine data and team needs, there's a 73% chance Team X takes a CB in Round 1.' Smart nudges to help users make better predictions.", phase: 4, status: "future", priority: "medium" },
+  { id: 28, title: "Custom Scoring Rules", description: "Pool admins can configure scoring weights: how many points for exact match, partial credit range, trade bonuses. Make every pool unique.", phase: 4, status: "future", priority: "low" },
+  { id: 29, title: "Push Notifications", description: "Real-time alerts on draft night: 'Pick #7 is in — your score just jumped to 2nd place!' Keeps users engaged even if they tab away.", phase: 4, status: "future", priority: "medium" },
+  { id: 30, title: "Printable Pick Sheets", description: "Export your mock or pool results as a clean PDF or CSV. Great for draft parties, office pools, and bragging rights.", phase: 4, status: "future", priority: "low" },
+  { id: 31, title: "Public Contests / Arena", description: "Beyond private pools — open contests where anyone can enter and compete for the global leaderboard. Top predictors get featured.", phase: 4, status: "future", priority: "medium" },
+  { id: 32, title: "Entry Fee / Payout Tracking", description: "Optional buy-in pools with a built-in ledger. Track who paid, calculate payouts based on final standings. No real money processing — just the ledger.", phase: 4, status: "future", priority: "low" },
+
+  // ── Phase 5: Future Ideas ──
+  { id: 33, title: "NBA Draft Support", description: "Expand beyond NFL to NBA draft prediction pools. Same pool mechanics, different sport.", phase: 5, status: "future", priority: "low" },
+  { id: 34, title: "Draft-Night Chat & Reactions", description: "In-pool chat during the draft with emoji reactions, GIFs, and trash talk. The group text experience, built into the app.", phase: 5, status: "future", priority: "low" },
+  { id: 35, title: "Streak & Achievement Badges", description: "Gamification layer: 'Called 5 in a row', 'Beat Dan 3 years running', 'First to submit picks'. Collectible badges on your profile.", phase: 5, status: "future", priority: "low" },
+  { id: 36, title: "Live Multiplayer Draft Rooms", description: "Real-time draft simulation with friends — each person controls a team and drafts simultaneously. The ultimate pre-draft party mode.", phase: 5, status: "future", priority: "low" },
+  { id: 37, title: "Reporter Accountability Cards", description: "Grade media predictions — which insiders actually get their scoops right? Transparency layer inspired by AIMockDraft's approach.", phase: 5, status: "future", priority: "low" },
+  { id: 38, title: "Discussion / Community Boards", description: "In-app forums for prospect debates, trade rumors, and mock draft discussion. Community layer if Slidey grows beyond friend groups.", phase: 5, status: "future", priority: "low" },
+];
+
+const phaseNames = {
+  1: "Draft Night Core",
+  2: "Content Platform",
+  3: "Simulator & Advanced Scoring",
+  4: "Growth & Intelligence",
+  5: "Future Ideas"
+};
+
+const phaseDescriptions = {
+  1: "The MVP — everything needed for draft night with your friends",
+  2: "The editorial stack that makes Slidey a destination, not just a game",
+  3: "Mock draft simulator and advanced prediction mechanics",
+  4: "Analytics, AI, and features that grow the platform",
+  5: "Wish list — things we might build as the community grows"
+};
+
+function render(filter = 'all') {
+  const phasesEl = document.getElementById('phases');
+  phasesEl.innerHTML = '';
+
+  const filtered = filter === 'all' ? features : features.filter(f => f.status === filter);
+  const grouped = {};
+  filtered.forEach(f => {
+    if (!grouped[f.phase]) grouped[f.phase] = [];
+    grouped[f.phase].push(f);
+  });
+
+  Object.keys(grouped).sort((a, b) => a - b).forEach(phase => {
+    const items = grouped[phase];
+    const div = document.createElement('div');
+    div.className = 'phase';
+    div.innerHTML = `
+      <div class="phase-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="phase-number">Phase ${phase}</span>
+        <span class="phase-title">${phaseNames[phase]}</span>
+        <span class="phase-count">${items.length} feature${items.length !== 1 ? 's' : ''} &middot; ${phaseDescriptions[phase]}</span>
+        <span class="phase-toggle">&#9660;</span>
+      </div>
+      <div class="feature-grid">
+        ${items.map(f => `
+          <div class="feature-card status-${f.status}" onclick="this.classList.toggle('expanded')">
+            <div class="card-top">
+              <span class="card-title">${f.title}</span>
+              <span class="card-badge badge-${f.status}">${f.status.replace('-', ' ')}</span>
+            </div>
+            <div class="card-priority ${f.priority}">${f.priority} priority</div>
+            <div class="card-expand-hint">Click to expand &darr;</div>
+            <div class="card-desc">${f.description}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    phasesEl.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = features.length;
+  const complete = features.filter(f => f.status === 'complete').length;
+  const inProgress = features.filter(f => f.status === 'in-progress').length;
+  const planned = features.filter(f => f.status === 'planned').length;
+  const future = features.filter(f => f.status === 'future').length;
+  const pct = total > 0 ? Math.round((complete / total) * 100) : 0;
+
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('countComplete').textContent = complete;
+  document.getElementById('countProgress').textContent = inProgress;
+  document.getElementById('countPlanned').textContent = planned;
+  document.getElementById('countFuture').textContent = future;
+}
+
+function filterCards(status) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  render(status);
+}
+
+render();
+</script>
+</body>
+</html>
