@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slidey.com Draft — Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a14;
+    --surface: #0c1322;
+    --surface-hover: #111c33;
+    --border: #1a2742;
+    --border-accent: #253a5c;
+    --text: #e4e8ef;
+    --text-dim: #98a4b8;
+    --text-muted: #6a7891;
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.10);
+    --red: #f87171;
+    --blue: #60a5fa;
+    --blue-bg: rgba(96,165,250,0.12);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.10);
+    --orange: #fb923c;
+    --orange-bg: rgba(251,147,60,0.10);
+    --slidey: #4A7AB5;
+    --slidey-dim: rgba(4,30,66,0.20);
+    --gtown-navy: #041E42;
+    --lions-blue: #0076B6;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; line-height: 1.5; border-top: 4px solid var(--gtown-navy); }
+
+  .header { padding: 48px 32px 16px; max-width: 1200px; margin: 0 auto; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 3px; color: #8D817B; text-transform: uppercase; margin-bottom: 8px; }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 1px; color: var(--text); }
+  .header h1 span { color: var(--slidey); }
+  .header .sub { font-size: 14px; color: var(--text-muted); max-width: 700px; margin-top: 8px; }
+
+  /* Tabs */
+  .tabs { max-width: 1200px; margin: 24px auto 0; padding: 0 32px; display: flex; gap: 0; border-bottom: 2px solid var(--border); overflow-x: auto; }
+  .tab { padding: 12px 24px; font-weight: 600; font-size: 14px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--slidey); border-bottom-color: var(--slidey); }
+  .panel { display: none; max-width: 1200px; margin: 0 auto; padding: 32px; }
+  .panel.active { display: block; }
+
+  /* Stack Overview */
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stack-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .stack-card:hover { border-color: var(--border-accent); }
+  .stack-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+  .stack-value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .stack-detail { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .stack-card .tech { font-family: var(--mono); font-size: 12px; color: var(--blue); margin-top: 8px; padding: 4px 8px; background: var(--blue-bg); border-radius: 4px; display: inline-block; }
+
+  /* Architecture Diagram */
+  .diagram { margin: 32px 0; }
+  .layer { margin-bottom: 24px; }
+  .layer-label { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+  .layer-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .layer-boxes { display: flex; flex-wrap: wrap; gap: 12px; }
+  .box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; min-width: 160px; flex: 1; position: relative; }
+  .box-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .box-sub { font-size: 11px; color: var(--text-dim); }
+  .box-tech { font-family: var(--mono); font-size: 10px; color: var(--purple); margin-top: 6px; }
+  .box.primary { border-color: var(--slidey); background: var(--slidey-dim); }
+  .box.data { border-color: rgba(52,211,153,0.3); background: var(--green-bg); }
+  .box.auth { border-color: rgba(251,191,36,0.3); background: var(--yellow-bg); }
+  .box.infra { border-color: rgba(167,139,250,0.3); background: var(--purple-bg); }
+
+  .arrow-row { display: flex; justify-content: center; padding: 8px 0; color: var(--text-muted); font-size: 20px; letter-spacing: 8px; }
+
+  /* Schema */
+  .schema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .table-card-header { padding: 14px 18px; background: rgba(4,30,66,0.3); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .table-icon { font-size: 16px; }
+  .table-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--blue); }
+  .table-desc { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+  .table-fields { padding: 12px 18px; }
+  .field { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(26,39,66,0.5); }
+  .field:last-child { border-bottom: none; }
+  .field-name { font-family: var(--mono); font-size: 12px; color: var(--text); min-width: 120px; }
+  .field-type { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+  .field-key { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: auto; }
+  .pk { background: var(--yellow-bg); color: var(--yellow); }
+  .fk { background: var(--blue-bg); color: var(--blue); }
+
+  /* Routes */
+  .route-list { display: grid; gap: 8px; }
+  .route { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+  .route:hover { border-color: var(--border-accent); }
+  .method { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; min-width: 48px; text-align: center; }
+  .method-get { background: var(--green-bg); color: var(--green); }
+  .method-post { background: var(--blue-bg); color: var(--blue); }
+  .method-page { background: var(--purple-bg); color: var(--purple); }
+  .route-path { font-family: var(--mono); font-size: 13px; color: var(--text); flex: 1; }
+  .route-desc { font-size: 12px; color: var(--text-dim); }
+  .route-phase { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .p1 { background: var(--green-bg); color: var(--green); }
+  .p2 { background: var(--yellow-bg); color: var(--yellow); }
+  .p3 { background: var(--orange-bg); color: var(--orange); }
+
+  /* Phase timeline */
+  .timeline { margin-top: 24px; }
+  .phase-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+  .phase-badge { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 4px 12px; border-radius: 4px; flex-shrink: 0; min-width: 48px; text-align: center; }
+  .phase-badge.pb1 { background: var(--green-bg); color: var(--green); }
+  .phase-badge.pb2 { background: var(--yellow-bg); color: var(--yellow); }
+  .phase-badge.pb3 { background: var(--orange-bg); color: var(--orange); }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .phase-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+  .phase-features { display: flex; flex-wrap: wrap; gap: 6px; }
+  .feature-chip { font-size: 11px; padding: 3px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text-dim); }
+
+  .note-box { margin-top: 24px; padding: 20px; background: var(--slidey-dim); border: 1px solid rgba(74,122,181,0.3); border-radius: 10px; }
+  .note-box h4 { font-size: 14px; margin-bottom: 6px; }
+  .note-box p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+  .footer { max-width: 1200px; margin: 0 auto; padding: 24px 32px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+
+  @media (max-width: 768px) {
+    .header, .tabs, .panel, .footer { padding-left: 16px; padding-right: 16px; }
+    .stack-grid { grid-template-columns: 1fr; }
+    .schema-grid { grid-template-columns: 1fr; }
+    .layer-boxes { flex-direction: column; }
+    .phase-row { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Slidey.com Draft &mdash; Reference Hub</div>
+  <h1>Technical <span>Architecture</span></h1>
+  <div class="sub">System design for the Slidey.com Draft platform. Next.js + Neon + Vercel stack with phased feature delivery from Dan's Picks through live draft scoring.</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="overview">Stack Overview</button>
+  <button class="tab" data-tab="diagram">Architecture Diagram</button>
+  <button class="tab" data-tab="schema">Database Schema</button>
+  <button class="tab" data-tab="routes">Routes &amp; API</button>
+  <button class="tab" data-tab="phases">Build Phases</button>
+</div>
+
+<!-- TAB 1: Stack Overview -->
+<div id="tab-overview" class="panel active">
+  <div class="stack-grid">
+    <div class="stack-card">
+      <div class="stack-label">Framework</div>
+      <div class="stack-value">Next.js 15</div>
+      <div class="stack-detail">App Router, Server Components, Server Actions</div>
+      <span class="tech">npx create-next-app@latest</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Styling</div>
+      <div class="stack-value">Tailwind CSS</div>
+      <div class="stack-detail">Port existing design tokens: Lions blue + Georgetown navy</div>
+      <span class="tech">tailwind.config.ts</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Database</div>
+      <div class="stack-value">Neon (Postgres)</div>
+      <div class="stack-detail">Serverless, scale-to-zero, no inactivity deletion</div>
+      <span class="tech">@neondatabase/serverless</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">ORM</div>
+      <div class="stack-value">Drizzle</div>
+      <div class="stack-detail">Type-safe schema, auto migrations, lightweight</div>
+      <span class="tech">drizzle-orm/neon-serverless</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Auth</div>
+      <div class="stack-value">Auth.js (NextAuth)</div>
+      <div class="stack-detail">Phase 1: Admin-only (Dan). Phase 2+: User accounts</div>
+      <span class="tech">next-auth@beta</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Hosting</div>
+      <div class="stack-value">Vercel</div>
+      <div class="stack-detail">Auto-deploy from GitHub, native Neon integration</div>
+      <span class="tech">vercel --prod</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Fonts</div>
+      <div class="stack-value">Bebas Neue + IBM Plex Sans</div>
+      <div class="stack-detail">Existing design system carries over</div>
+      <span class="tech">next/font/google</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label">Real-time (Phase 2)</div>
+      <div class="stack-value">Server-Sent Events</div>
+      <div class="stack-detail">Live scoreboard updates on draft night via SSE</div>
+      <span class="tech">EventSource API</span>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <h4>Why this stack?</h4>
+    <p>Neon solves the Supabase inactivity problem &mdash; data survives the NFL offseason without paying $25/mo. Next.js App Router gives us server components for fast initial loads (critical for draft night traffic spikes) and server actions for Dan's admin mutations. Drizzle keeps the ORM layer thin and type-safe. Auth.js starts as admin-only and scales to full user auth when pools launch. Everything auto-deploys from GitHub through the existing Vercel pipeline.</p>
+  </div>
+</div>
+
+<!-- TAB 2: Architecture Diagram -->
+<div id="tab-diagram" class="panel">
+  <div class="diagram">
+
+    <div class="layer">
+      <div class="layer-label">Client Layer</div>
+      <div class="layer-boxes">
+        <div class="box primary">
+          <div class="box-title">Public Pages</div>
+          <div class="box-sub">Draft board, Dan's picks, leaderboard, prospect profiles</div>
+          <div class="box-tech">React Server Components + Tailwind</div>
+        </div>
+        <div class="box primary">
+          <div class="box-title">Admin Dashboard</div>
+          <div class="box-sub">Dan's pick builder, draft order editor, content CMS</div>
+          <div class="box-tech">Client Components + Server Actions</div>
+        </div>
+        <div class="box">
+          <div class="box-title">Live Draft UI (P2)</div>
+          <div class="box-sub">Real-time scoreboard, pick feed, accuracy tracker</div>
+          <div class="box-tech">SSE + React state</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-row">&darr; &darr; &darr;</div>
+
+    <div class="layer">
+      <div class="layer-label">Application Layer</div>
+      <div class="layer-boxes">
+        <div class="box">
+          <div class="box-title">Next.js App Router</div>
+          <div class="box-sub">Server components, API routes, middleware</div>
+          <div class="box-tech">app/ directory structure</div>
+        </div>
+        <div class="box auth">
+          <div class="box-title">Auth.js Middleware</div>
+          <div class="box-sub">Protect /admin routes, session management</div>
+          <div class="box-tech">middleware.ts + auth.ts</div>
+        </div>
+        <div class="box">
+          <div class="box-title">Server Actions</div>
+          <div class="box-sub">Mutations: create pick, update draft order, publish board</div>
+          <div class="box-tech">"use server" functions</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-row">&darr; &darr; &darr;</div>
+
+    <div class="layer">
+      <div class="layer-label">Data Layer</div>
+      <div class="layer-boxes">
+        <div class="box data">
+          <div class="box-title">Drizzle ORM</div>
+          <div class="box-sub">Type-safe queries, schema definitions, migrations</div>
+          <div class="box-tech">db/schema.ts + db/index.ts</div>
+        </div>
+        <div class="box data">
+          <div class="box-title">Neon Postgres</div>
+          <div class="box-sub">Serverless connection, scale-to-zero, branching</div>
+          <div class="box-tech">DATABASE_URL via Vercel env</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-row">&darr; &darr;</div>
+
+    <div class="layer">
+      <div class="layer-label">Infrastructure</div>
+      <div class="layer-boxes">
+        <div class="box infra">
+          <div class="box-title">Vercel Edge Network</div>
+          <div class="box-sub">CDN, serverless functions, preview deploys</div>
+          <div class="box-tech">Auto-deploy from gstreet-ops/slidey-draft</div>
+        </div>
+        <div class="box infra">
+          <div class="box-title">GitHub</div>
+          <div class="box-sub">Source control, CI triggers</div>
+          <div class="box-tech">gstreet-ops/slidey-draft</div>
+        </div>
+        <div class="box">
+          <div class="box-title">Vercel Blob (P2)</div>
+          <div class="box-sub">Player headshots, team logos, share card images</div>
+          <div class="box-tech">@vercel/blob</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TAB 3: Database Schema -->
+<div id="tab-schema" class="panel">
+  <div class="schema-grid">
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">draft_boards</span>
+        <span class="table-desc">P1</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">season</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">title</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">type</span><span class="field-type">enum(mock, actual)</span></div>
+        <div class="field"><span class="field-name">status</span><span class="field-type">enum(draft, published, locked)</span></div>
+        <div class="field"><span class="field-name">created_by</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">published_at</span><span class="field-type">timestamp</span></div>
+        <div class="field"><span class="field-name">created_at</span><span class="field-type">timestamp</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">picks</span>
+        <span class="table-desc">P1</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">board_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">pick_number</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">round</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">team</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">player_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">rationale</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">confidence</span><span class="field-type">enum(lock, likely, sleeper)</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">players</span>
+        <span class="table-desc">P1</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">name</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">position</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">school</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">headshot_url</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">class_year</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">big_board_rank</span><span class="field-type">integer</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">teams</span>
+        <span class="table-desc">P1</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">name</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">abbreviation</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">logo_url</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">primary_color</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">division</span><span class="field-type">text</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">draft_order</span>
+        <span class="table-desc">P1</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">season</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">pick_number</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">round</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">team_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">traded_from</span><span class="field-type">text</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">actual_results</span>
+        <span class="table-desc">P2</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">season</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">pick_number</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">round</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">team_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">player_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">was_trade</span><span class="field-type">boolean</span></div>
+        <div class="field"><span class="field-name">announced_at</span><span class="field-type">timestamp</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">scores</span>
+        <span class="table-desc">P2</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">board_id</span><span class="field-type">uuid</span><span class="field-key fk">FK</span></div>
+        <div class="field"><span class="field-name">pick_number</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">points</span><span class="field-type">integer</span></div>
+        <div class="field"><span class="field-name">match_type</span><span class="field-type">enum(exact, near, round, miss)</span></div>
+        <div class="field"><span class="field-name">computed_at</span><span class="field-type">timestamp</span></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-icon">&#9783;</span>
+        <span class="table-name">users</span>
+        <span class="table-desc">P1 (admin) / P2+ (public)</span>
+      </div>
+      <div class="table-fields">
+        <div class="field"><span class="field-name">id</span><span class="field-type">uuid</span><span class="field-key pk">PK</span></div>
+        <div class="field"><span class="field-name">email</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">name</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">role</span><span class="field-type">enum(admin, user)</span></div>
+        <div class="field"><span class="field-name">avatar_url</span><span class="field-type">text</span></div>
+        <div class="field"><span class="field-name">created_at</span><span class="field-type">timestamp</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top:24px;">
+    <h4>Schema notes</h4>
+    <p><strong>draft_boards</strong> supports both Dan's mock drafts and the actual draft results in the same structure. The <code>type</code> field distinguishes them. The scoring engine compares picks from a <code>mock</code> board against the <code>actual</code> board for the same season. Tables for pools, pool_members, and pool_scores will be added in Phase 3 when the social/competition features launch.</p>
+  </div>
+</div>
+
+<!-- TAB 4: Routes & API -->
+<div id="tab-routes" class="panel">
+  <h3 style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:16px;color:var(--text-dim);">Public Pages</h3>
+  <div class="route-list">
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/</span><span class="route-desc">Landing / draft board (current season)</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/picks</span><span class="route-desc">Dan's full mock draft with analysis</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/picks/[pick]</span><span class="route-desc">Single pick detail with rationale</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/results</span><span class="route-desc">Predictions vs actual results + accuracy score</span><span class="route-phase p2">P2</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/live</span><span class="route-desc">Draft night live scoreboard + pick feed</span><span class="route-phase p2">P2</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/prospects</span><span class="route-desc">Big board / prospect rankings</span><span class="route-phase p2">P2</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/teams/[team]</span><span class="route-desc">Team needs, picks, cap space</span><span class="route-phase p2">P2</span></div>
+  </div>
+
+  <h3 style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin:24px 0 16px;color:var(--text-dim);">Admin Routes</h3>
+  <div class="route-list">
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/admin</span><span class="route-desc">Dashboard: draft boards, stats</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/admin/picks</span><span class="route-desc">Mock draft builder (pick-by-pick editor)</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/admin/draft-order</span><span class="route-desc">Edit round 1-7 draft order</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/admin/players</span><span class="route-desc">Manage prospect database</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-page">PAGE</span><span class="route-path">/admin/live</span><span class="route-desc">Draft night control room (enter actual picks)</span><span class="route-phase p2">P2</span></div>
+  </div>
+
+  <h3 style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin:24px 0 16px;color:var(--text-dim);">API Endpoints</h3>
+  <div class="route-list">
+    <div class="route"><span class="method method-get">GET</span><span class="route-path">/api/boards/[season]</span><span class="route-desc">Get draft board by season</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-get">GET</span><span class="route-path">/api/picks/[boardId]</span><span class="route-desc">Get all picks for a board</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-post">POST</span><span class="route-path">/api/admin/picks</span><span class="route-desc">Create/update pick (server action)</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-post">POST</span><span class="route-path">/api/admin/publish</span><span class="route-desc">Publish draft board</span><span class="route-phase p1">P1</span></div>
+    <div class="route"><span class="method method-get">GET</span><span class="route-path">/api/live/stream</span><span class="route-desc">SSE endpoint for draft night updates</span><span class="route-phase p2">P2</span></div>
+    <div class="route"><span class="method method-post">POST</span><span class="route-path">/api/admin/actual-pick</span><span class="route-desc">Record actual draft pick (triggers scoring)</span><span class="route-phase p2">P2</span></div>
+    <div class="route"><span class="method method-get">GET</span><span class="route-path">/api/scores/[boardId]</span><span class="route-desc">Get accuracy scores for a mock board</span><span class="route-phase p2">P2</span></div>
+  </div>
+</div>
+
+<!-- TAB 5: Build Phases -->
+<div id="tab-phases" class="panel">
+  <div class="timeline">
+
+    <div class="phase-row">
+      <span class="phase-badge pb1">P1</span>
+      <div class="phase-content">
+        <div class="phase-title">Dan's Picks + Public Board</div>
+        <div class="phase-desc">The foundation. Dan builds his mock draft in an admin UI, fans see a polished public board. Scaffold the Next.js app, wire Neon, define schema, build admin CRUD and public views.</div>
+        <div class="phase-features">
+          <span class="feature-chip">Next.js scaffold</span>
+          <span class="feature-chip">Neon + Drizzle setup</span>
+          <span class="feature-chip">Admin auth (Dan only)</span>
+          <span class="feature-chip">Pick builder UI</span>
+          <span class="feature-chip">Draft order editor</span>
+          <span class="feature-chip">Player database</span>
+          <span class="feature-chip">Public draft board</span>
+          <span class="feature-chip">Pick detail pages</span>
+          <span class="feature-chip">Lions + Georgetown theming</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-row">
+      <span class="phase-badge pb2">P2</span>
+      <div class="phase-content">
+        <div class="phase-title">Live Draft Night + Scoring</div>
+        <div class="phase-desc">Draft night experience. Record actual picks in real-time, score Dan's predictions, show live accuracy tracker. SSE for push updates without full real-time infrastructure.</div>
+        <div class="phase-features">
+          <span class="feature-chip">Actual results entry</span>
+          <span class="feature-chip">SSE live feed</span>
+          <span class="feature-chip">Scoring engine</span>
+          <span class="feature-chip">Live accuracy tracker</span>
+          <span class="feature-chip">Results comparison page</span>
+          <span class="feature-chip">Big board / prospects</span>
+          <span class="feature-chip">Team needs pages</span>
+          <span class="feature-chip">Social share cards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-row">
+      <span class="phase-badge pb3">P3</span>
+      <div class="phase-content">
+        <div class="phase-title">Pools + Social Competition</div>
+        <div class="phase-desc">Multi-user experience. User accounts, private draft pools with invite codes, Beat Dan challenge, leaderboards, and the scoring engine extended for pool play.</div>
+        <div class="phase-features">
+          <span class="feature-chip">User registration</span>
+          <span class="feature-chip">Draft pools</span>
+          <span class="feature-chip">Pool invites</span>
+          <span class="feature-chip">Beat Dan challenge</span>
+          <span class="feature-chip">Leaderboards</span>
+          <span class="feature-chip">Tiered scoring</span>
+          <span class="feature-chip">Custom scoring rules</span>
+          <span class="feature-chip">Share results</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <h4>Build approach</h4>
+    <p>Phase 1 is buildable in a focused sprint &mdash; it's essentially a CRUD app with a nice frontend. The schema is designed so Phase 2 (scoring) and Phase 3 (pools) bolt on without restructuring. The <code>draft_boards</code> + <code>picks</code> pattern works for Dan's mocks, user predictions, and actual results &mdash; the <code>type</code> field differentiates them. Drizzle migrations handle schema evolution as new tables arrive.</p>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Slidey.com Draft &mdash; Technical Architecture v1.0</span>
+  <span>April 5, 2026</span>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
