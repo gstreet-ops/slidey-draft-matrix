@@ -575,6 +575,51 @@
 
   .nav-bar a:hover { border-color: var(--accent); background: var(--accent-dim); }
 
+  /* Draft Order Editor */
+  .order-row {
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr 40px;
+    gap: 10px;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: all 0.2s;
+  }
+  .order-row:hover { border-color: var(--border-accent); }
+  .order-pick-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--slidey);
+    text-align: center;
+  }
+  .order-input {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+  }
+  .order-input:focus { outline: none; border-color: var(--accent); }
+  .order-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .order-remove {
+    background: transparent;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  .order-remove:hover { opacity: 1; }
+
   @media (max-width: 900px) {
     .pick-row {
       grid-template-columns: 36px 1fr 1fr;
@@ -610,6 +655,7 @@
   <button class="mode-tab active" onclick="switchMode('builder')"><span class="tab-icon">&#9997;</span>Mock Builder</button>
   <button class="mode-tab" onclick="switchMode('preview')"><span class="tab-icon">&#128065;</span>Preview</button>
   <button class="mode-tab" onclick="switchMode('live')"><span class="tab-icon">&#128308;</span>Live Feed</button>
+  <button class="mode-tab" onclick="switchMode('order')"><span class="tab-icon">&#128203;</span>Draft Order</button>
 </div>
 
 <!-- MOCK BUILDER PANEL -->
@@ -662,6 +708,36 @@
   <div id="liveFeed"></div>
 </div>
 
+<!-- DRAFT ORDER PANEL -->
+<div class="panel" id="panel-order">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text)">2026 NFL Draft — Round 1 Order</h2>
+      <p style="font-size:13px;color:var(--text-muted)">Last updated: <span id="orderLastUpdated">—</span> &nbsp;·&nbsp; Edit teams, drag to reorder, or paste a full JSON update.</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="publish-btn" style="background:var(--accent);font-size:12px;padding:6px 14px" onclick="saveOrderToJSON()">&#128190; Export JSON</button>
+      <button class="publish-btn" style="background:var(--green);font-size:12px;padding:6px 14px" onclick="applyOrderToBuilder()">&#10004; Apply to Mock Builder</button>
+    </div>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <span style="color:var(--yellow)">&#9888;</span> Trades happen! Update the order here and click <strong style="color:var(--green)">"Apply to Mock Builder"</strong> to push changes to your mock.
+    </div>
+    <div id="orderGrid" style="display:flex;flex-direction:column;gap:6px"></div>
+  </div>
+
+  <div style="margin-top:16px">
+    <details style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+      <summary style="cursor:pointer;color:var(--accent);font-weight:600;font-size:14px">&#128203; Paste JSON Update</summary>
+      <p style="font-size:12px;color:var(--text-muted);margin:8px 0">Paste a full <code>draft-order.json</code> payload to bulk-update the order. Useful when copying from an external source.</p>
+      <textarea id="jsonPasteArea" style="width:100%;height:160px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:monospace;font-size:12px;resize:vertical" placeholder='Paste draft-order.json contents here...'></textarea>
+      <button class="publish-btn" style="margin-top:8px;font-size:12px;padding:6px 14px" onclick="importJSONOrder()">Import &amp; Apply</button>
+    </details>
+  </div>
+</div>
+
 <div class="nav-bar">
   <a href="./">&larr; Matrix</a>
   <a href="roadmap">Roadmap</a>
@@ -672,56 +748,53 @@
 const picks = [];
 const livePosts = [];
 let currentPostType = 'take';
+let draftOrderData = null; // loaded from draft-order.json
 
-// Sample 2026 Round 1 order (pre-trades)
-// 2026 NFL Draft Round 1 order (post-trades, as of April 2026)
-// Note: ATL, GB, JAX, IND traded away their 1st-round picks
-const round1Teams = [
-  "Las Vegas Raiders",           // 1
-  "New York Jets",               // 2
-  "Arizona Cardinals",           // 3
-  "Tennessee Titans",            // 4
-  "New York Giants",             // 5
-  "Cleveland Browns",            // 6
-  "Washington Commanders",       // 7
-  "New Orleans Saints",          // 8
-  "Kansas City Chiefs",          // 9
-  "Cincinnati Bengals",          // 10
-  "Miami Dolphins",              // 11
-  "Dallas Cowboys",              // 12
-  "Los Angeles Rams",            // 13 (from ATL)
-  "Baltimore Ravens",            // 14
-  "Tampa Bay Buccaneers",        // 15
-  "New York Jets",               // 16 (from IND)
-  "Detroit Lions",               // 17
-  "Minnesota Vikings",           // 18
-  "Carolina Panthers",           // 19
-  "Dallas Cowboys",              // 20 (from GB)
-  "Pittsburgh Steelers",         // 21
-  "Los Angeles Chargers",        // 22
-  "Philadelphia Eagles",         // 23
-  "Cleveland Browns",            // 24 (from JAX)
-  "Chicago Bears",               // 25
-  "Buffalo Bills",               // 26
-  "San Francisco 49ers",         // 27
-  "Houston Texans",              // 28
-  "Kansas City Chiefs",          // 29 (from LAR)
-  "Miami Dolphins",              // 30 (from DEN)
-  "New England Patriots",        // 31
-  "Seattle Seahawks"             // 32
+// Fallback order in case JSON can't be fetched
+const fallbackTeams = [
+  "Las Vegas Raiders","New York Jets","Arizona Cardinals","Tennessee Titans",
+  "New York Giants","Cleveland Browns","Washington Commanders","New Orleans Saints",
+  "Kansas City Chiefs","Cincinnati Bengals","Miami Dolphins","Dallas Cowboys",
+  "Los Angeles Rams","Baltimore Ravens","Tampa Bay Buccaneers","New York Jets",
+  "Detroit Lions","Minnesota Vikings","Carolina Panthers","Dallas Cowboys",
+  "Pittsburgh Steelers","Los Angeles Chargers","Philadelphia Eagles","Cleveland Browns",
+  "Chicago Bears","Buffalo Bills","San Francisco 49ers","Houston Texans",
+  "Kansas City Chiefs","Miami Dolphins","New England Patriots","Seattle Seahawks"
 ];
 
-for (let i = 0; i < 32; i++) {
-  picks.push({
-    num: i + 1,
-    team: round1Teams[i],
-    player: '',
-    position: '',
-    school: '',
-    confidence: '',
-    analysis: '',
-    tags: []
-  });
+function initPicks(orderEntries) {
+  picks.length = 0;
+  for (let i = 0; i < orderEntries.length; i++) {
+    picks.push({
+      num: orderEntries[i].pick || (i + 1),
+      team: orderEntries[i].team,
+      note: orderEntries[i].note || '',
+      player: '',
+      position: '',
+      school: '',
+      confidence: '',
+      analysis: '',
+      tags: []
+    });
+  }
+}
+
+// Load draft order from JSON file
+async function loadDraftOrder() {
+  try {
+    const resp = await fetch('draft-order.json?v=' + Date.now());
+    draftOrderData = await resp.json();
+    initPicks(draftOrderData.round1);
+    const updEl = document.getElementById('orderLastUpdated');
+    if (updEl) updEl.textContent = draftOrderData.lastUpdated || 'Unknown';
+  } catch (e) {
+    console.warn('Could not load draft-order.json, using fallback:', e);
+    draftOrderData = { lastUpdated: 'Fallback', season: 2026, round1: fallbackTeams.map((t, i) => ({ pick: i+1, team: t, note: '' })) };
+    initPicks(draftOrderData.round1);
+  }
+  renderBuilder();
+  updateStats();
+  renderOrderEditor();
 }
 
 function renderBuilder() {
@@ -868,9 +941,96 @@ function switchMode(mode) {
   if (mode === 'live') renderFeed();
 }
 
+// ── Draft Order Editor ──
+function renderOrderEditor() {
+  const grid = document.getElementById('orderGrid');
+  if (!grid || !draftOrderData) return;
+  grid.innerHTML = draftOrderData.round1.map((entry, i) => `
+    <div class="order-row" id="order-row-${i}">
+      <div class="order-pick-num">${entry.pick}</div>
+      <input class="order-input" value="${entry.team}" placeholder="Team name" onchange="updateOrderTeam(${i}, this.value)">
+      <input class="order-input" value="${entry.note || ''}" placeholder="Trade note (e.g. from ATL)" style="color:var(--text-muted);font-style:italic" onchange="updateOrderNote(${i}, this.value)">
+      <button class="order-remove" onclick="removeOrderPick(${i})" title="Remove pick">&times;</button>
+    </div>
+  `).join('') + `
+    <button onclick="addOrderPick()" style="margin-top:8px;background:var(--accent-dim);border:1px dashed var(--accent);color:var(--accent);padding:10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;width:100%;transition:all 0.2s">+ Add Pick</button>
+  `;
+}
+
+function updateOrderTeam(i, val) { draftOrderData.round1[i].team = val; }
+function updateOrderNote(i, val) { draftOrderData.round1[i].note = val; }
+
+function removeOrderPick(i) {
+  draftOrderData.round1.splice(i, 1);
+  // Renumber
+  draftOrderData.round1.forEach((e, idx) => e.pick = idx + 1);
+  renderOrderEditor();
+}
+
+function addOrderPick() {
+  const nextNum = draftOrderData.round1.length + 1;
+  draftOrderData.round1.push({ pick: nextNum, team: '', note: '' });
+  renderOrderEditor();
+}
+
+function applyOrderToBuilder() {
+  // Preserve existing player data where possible
+  const oldPicks = picks.map(p => ({...p}));
+  initPicks(draftOrderData.round1);
+  // Re-apply player data by pick number
+  for (const op of oldPicks) {
+    const match = picks.find(p => p.num === op.num);
+    if (match && op.player) {
+      match.player = op.player;
+      match.position = op.position;
+      match.school = op.school;
+      match.confidence = op.confidence;
+      match.analysis = op.analysis;
+      match.tags = op.tags;
+    }
+  }
+  renderBuilder();
+  updateStats();
+  // Flash confirmation
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '\u2714 Applied!';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = 'var(--green)'; }, 1500);
+}
+
+function saveOrderToJSON() {
+  draftOrderData.lastUpdated = new Date().toISOString().split('T')[0];
+  const json = JSON.stringify(draftOrderData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'draft-order.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJSONOrder() {
+  try {
+    const raw = document.getElementById('jsonPasteArea').value.trim();
+    const data = JSON.parse(raw);
+    if (!data.round1 || !Array.isArray(data.round1)) throw new Error('Missing round1 array');
+    draftOrderData = data;
+    initPicks(draftOrderData.round1);
+    renderBuilder();
+    renderOrderEditor();
+    updateStats();
+    const updEl = document.getElementById('orderLastUpdated');
+    if (updEl) updEl.textContent = draftOrderData.lastUpdated || 'Imported';
+    document.getElementById('jsonPasteArea').value = '';
+    alert('Draft order imported successfully! ' + draftOrderData.round1.length + ' picks loaded.');
+  } catch (e) {
+    alert('Invalid JSON: ' + e.message);
+  }
+}
+
 // ── Init ──
-renderBuilder();
-updateStats();
+loadDraftOrder();
 </script>
 </body>
 </html>
