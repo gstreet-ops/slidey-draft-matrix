@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slidey.com Draft — Database Comparison Matrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a14;
+    --surface: #0c1322;
+    --surface-hover: #111c33;
+    --border: #1a2742;
+    --border-accent: #253a5c;
+    --text: #e4e8ef;
+    --text-dim: #98a4b8;
+    --text-muted: #6a7891;
+    --accent: #8D817B;
+    --accent-dim: rgba(141,129,123,0.12);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.10);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.08);
+    --orange: #fb923c;
+    --slidey: #4A7AB5;
+    --slidey-dim: rgba(4,30,66,0.20);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.10);    --gtown-navy: #041E42;
+    --gtown-gray: #8D817B;
+    --gtown-accent: #5B6B80;
+    --gtown-highlight: #4A7AB5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    border-top: 4px solid var(--gtown-navy);
+  }
+
+  .header { padding: 48px 32px 24px; max-width: 1400px; margin: 0 auto; }
+  .header-eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 1px; color: var(--text); margin-bottom: 8px; }
+  .header h1 span { color: var(--slidey); }
+  .header .subtitle { font-size: 14px; color: var(--text-muted); max-width: 700px; }
+  .controls { max-width: 1400px; margin: 24px auto 0; padding: 0 32px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); padding: 6px 16px; border-radius: 6px; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover { border-color: var(--border-accent); color: var(--text); }
+  .filter-btn.active { background: var(--slidey-dim); border-color: var(--slidey); color: var(--slidey); }
+  .recommendation { max-width: 1400px; margin: 24px auto 0; padding: 0 32px; }
+  .rec-card { background: var(--slidey-dim); border: 1px solid rgba(74,122,181,0.3); border-radius: 10px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; }
+  .rec-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }  .rec-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .rec-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .matrix-wrap { max-width: 1400px; margin: 24px auto 48px; padding: 0 32px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--surface); color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+  thead th.provider-col { min-width: 160px; }
+  thead th.highlight { color: var(--slidey); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface-hover); }
+  tbody td { padding: 14px 16px; vertical-align: top; }
+  tbody td:first-child { font-weight: 600; color: var(--text); }
+  .category-row td { background: rgba(4,30,66,0.3); font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; color: var(--accent); padding: 10px 16px; border-bottom: 1px solid var(--border-accent); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-blue { background: var(--slidey-dim); color: var(--slidey); }
+  .check { color: var(--green); }
+  .cross { color: var(--red); opacity: 0.6; }
+  .partial { color: var(--yellow); }
+  .detail { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+  .verdicts { max-width: 1400px; margin: 0 auto 48px; padding: 0 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .verdict-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color 0.2s; }
+  .verdict-card:hover { border-color: var(--border-accent); }
+  .verdict-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .verdict-card p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .verdict-card .use-case { font-size: 11px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .footer { max-width: 1400px; margin: 0 auto; padding: 24px 32px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 768px) { .header { padding: 32px 16px 16px; } .controls, .recommendation, .matrix-wrap, .verdicts, .footer { padding-left: 16px; padding-right: 16px; } .header h1 { font-size: 28px; } .rec-card { flex-direction: column; gap: 8px; } .verdicts { grid-template-columns: 1fr; } }</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-eyebrow">Slidey.com Draft &mdash; Reference Hub</div>
+  <h1>Database <span>Comparison Matrix</span></h1>
+  <div class="subtitle">Side-by-side evaluation of managed database providers for the Slidey.com Draft platform. Prioritizing free-tier longevity, inactivity safety, and Vercel compatibility.</div>
+</div>
+<div class="controls">
+  <button class="filter-btn active" onclick="filterView('all')">All Features</button>
+  <button class="filter-btn" onclick="filterView('pricing')">Pricing</button>
+  <button class="filter-btn" onclick="filterView('features')">Features</button>
+  <button class="filter-btn" onclick="filterView('safety')">Data Safety</button>
+  <button class="filter-btn" onclick="filterView('dx')">Developer Experience</button>
+</div>
+<div class="recommendation">
+  <div class="rec-card">
+    <div class="rec-icon">&#9733;</div>
+    <div>
+      <h3>Recommendation for Slidey.com Draft: Neon (via Vercel Postgres)</h3>
+      <p>For a seasonal NFL draft app, Neon's scale-to-zero model with no data deletion on inactivity is the safest choice. Native Vercel integration means zero config. Supabase remains the better choice if you need built-in auth, real-time, or file storage down the road.</p>
+    </div>
+  </div>
+</div>
+<div class="matrix-wrap">
+  <table id="matrix">
+    <thead>
+      <tr>
+        <th class="provider-col">Provider</th>
+        <th class="highlight">Neon / Vercel Postgres</th>
+        <th>Supabase</th>
+        <th>Turso</th>
+        <th>Railway</th>
+      </tr>
+    </thead>
+    <tbody>      <tr class="category-row" data-cat="pricing"><td colspan="5">Pricing &amp; Free Tier</td></tr>
+      <tr data-cat="pricing"><td>Free Tier</td><td><span class="badge badge-green">Yes</span><div class="detail">No credit card required</div></td><td><span class="badge badge-green">Yes</span><div class="detail">No credit card required</div></td><td><span class="badge badge-green">Yes</span><div class="detail">No credit card required</div></td><td><span class="badge badge-yellow">Trial Only</span><div class="detail">$5 one-time credit, then $5/mo</div></td></tr>
+      <tr data-cat="pricing"><td>Free Storage</td><td>0.5 GB per project<div class="detail">Up to 10 projects (5 GB total)</div></td><td>500 MB<div class="detail">2 free projects</div></td><td>5 GB<div class="detail">500 databases included</div></td><td>1 GB <span class="badge badge-yellow">paid</span><div class="detail">Included in $5/mo Hobby plan</div></td></tr>
+      <tr data-cat="pricing"><td>Paid Tier Starts At</td><td>$19/mo<div class="detail">Launch plan — 10 GB, 1000 CU-hrs</div></td><td>$25/mo<div class="detail">Pro plan — 8 GB, no pausing</div></td><td>$29/mo<div class="detail">Scaler plan — 24 GB, groups</div></td><td>$5/mo<div class="detail">Hobby — includes $5 usage credit</div></td></tr>
+      <tr class="category-row" data-cat="safety"><td colspan="5">Data Safety &amp; Inactivity</td></tr>
+      <tr data-cat="safety"><td>Inactivity Policy</td><td><span class="badge badge-green">Scale to Zero</span><div class="detail">Compute sleeps after 5 min idle. Data persists indefinitely.</div></td><td><span class="badge badge-red">Paused &amp; Deleted</span><div class="detail">Free projects pause after 7 days inactive. Data deleted if not restored.</div></td><td><span class="badge badge-green">Always On</span><div class="detail">Databases stay responsive even when inactive. No cold starts.</div></td><td><span class="badge badge-yellow">Unclear</span><div class="detail">No published inactivity policy. No free tier to test.</div></td></tr>
+      <tr data-cat="safety"><td>Offseason Risk<br><span class="detail" style="margin:0">(months of zero traffic)</span></td><td><span class="check">&#10003;</span> <strong>None</strong><div class="detail">Data safe. ~300-500ms cold start on first query.</div></td><td><span class="cross">&#10007;</span> <strong>High</strong><div class="detail">Must manually unpause or upgrade to Pro ($25/mo) to prevent deletion.</div></td><td><span class="check">&#10003;</span> <strong>None</strong><div class="detail">Data safe. No cold starts even after months idle.</div></td><td><span class="partial">&#9679;</span> <strong>Low</strong><div class="detail">Paid plan — data persists as long as you're subscribed.</div></td></tr>
+      <tr data-cat="safety"><td>Point-in-Time Recovery</td><td>6 hours (free)<div class="detail">7+ days on paid plans</div></td><td>7 days (Pro only)<div class="detail">Not available on free tier</div></td><td><span class="cross">&#10007;</span> Not available<div class="detail">Manual backups only</div></td><td><span class="cross">&#10007;</span> Not available<div class="detail">Manual pg_dump recommended</div></td></tr>      <tr class="category-row" data-cat="features"><td colspan="5">Built-in Features</td></tr>
+      <tr data-cat="features"><td>Database Engine</td><td><span class="badge badge-blue">PostgreSQL</span><div class="detail">Serverless, fully managed</div></td><td><span class="badge badge-blue">PostgreSQL</span><div class="detail">Fully managed + extensions</div></td><td><span class="badge badge-purple">libSQL (SQLite)</span><div class="detail">Edge-native, embedded replicas</div></td><td><span class="badge badge-blue">PostgreSQL</span><div class="detail">Standard managed Postgres</div></td></tr>
+      <tr data-cat="features"><td>Built-in Auth</td><td><span class="cross">&#10007;</span> No<div class="detail">Use NextAuth, Clerk, or Auth.js</div></td><td><span class="check">&#10003;</span> <strong>Yes</strong><div class="detail">Email, OAuth, magic links, SSO</div></td><td><span class="cross">&#10007;</span> No<div class="detail">Use NextAuth, Clerk, or Auth.js</div></td><td><span class="cross">&#10007;</span> No<div class="detail">Use NextAuth, Clerk, or Auth.js</div></td></tr>
+      <tr data-cat="features"><td>Real-time Subscriptions</td><td><span class="cross">&#10007;</span> No<div class="detail">Build with websockets or SSE</div></td><td><span class="check">&#10003;</span> <strong>Yes</strong><div class="detail">Subscribe to row-level changes</div></td><td><span class="cross">&#10007;</span> No</td><td><span class="cross">&#10007;</span> No</td></tr>
+      <tr data-cat="features"><td>File Storage</td><td><span class="cross">&#10007;</span> No<div class="detail">Use Vercel Blob separately</div></td><td><span class="check">&#10003;</span> <strong>Yes</strong><div class="detail">S3-compatible bucket included</div></td><td><span class="cross">&#10007;</span> No</td><td><span class="cross">&#10007;</span> No</td></tr>
+      <tr data-cat="features"><td>REST / GraphQL API</td><td><span class="cross">&#10007;</span> No<div class="detail">Query via SQL drivers or ORMs</div></td><td><span class="check">&#10003;</span> <strong>Yes</strong><div class="detail">Auto-generated REST + GraphQL from schema</div></td><td><span class="cross">&#10007;</span> No<div class="detail">Use Drizzle ORM or raw SQL</div></td><td><span class="cross">&#10007;</span> No</td></tr>
+      <tr data-cat="features"><td>Edge / Global Distribution</td><td><span class="partial">&#9679;</span> Regions<div class="detail">Choose region; read replicas on paid</div></td><td><span class="partial">&#9679;</span> Single region<div class="detail">One region per project; read replicas on Pro</div></td><td><span class="check">&#10003;</span> <strong>Edge-native</strong><div class="detail">Embedded replicas at the edge, ultra-low latency reads</div></td><td><span class="partial">&#9679;</span> Regions<div class="detail">Multiple regions available</div></td></tr>
+      <tr data-cat="features"><td>Branching (dev/prod)</td><td><span class="check">&#10003;</span> <strong>Yes</strong><div class="detail">Unlimited branches, even on free tier</div></td><td><span class="cross">&#10007;</span> No<div class="detail">Separate projects for dev/prod</div></td><td><span class="cross">&#10007;</span> No</td><td><span class="cross">&#10007;</span> No</td></tr>      <tr class="category-row" data-cat="dx"><td colspan="5">Developer Experience</td></tr>
+      <tr data-cat="dx"><td>Vercel Integration</td><td><span class="badge badge-green">Native</span><div class="detail">Auto-populates env vars. First-party marketplace integration.</div></td><td><span class="badge badge-green">Marketplace</span><div class="detail">Vercel marketplace integration available. Manual env var setup.</div></td><td><span class="badge badge-yellow">Manual</span><div class="detail">Copy connection string to Vercel env vars</div></td><td><span class="badge badge-yellow">Manual</span><div class="detail">Copy connection string to Vercel env vars</div></td></tr>
+      <tr data-cat="dx"><td>Dashboard / Table Editor</td><td>SQL console<div class="detail">Tables view, query editor — functional but minimal</div></td><td><span class="check">&#10003;</span> <strong>Full GUI</strong><div class="detail">Table editor, row-level CRUD, SQL editor, schema visualizer</div></td><td>SQL shell<div class="detail">Basic CLI and web shell</div></td><td>Query tab<div class="detail">Basic query interface in dashboard</div></td></tr>
+      <tr data-cat="dx"><td>Drizzle ORM Support</td><td><span class="check">&#10003;</span> First-class<div class="detail">drizzle-orm/neon-serverless</div></td><td><span class="check">&#10003;</span> First-class<div class="detail">drizzle-orm/postgres-js</div></td><td><span class="check">&#10003;</span> First-class<div class="detail">drizzle-orm/libsql</div></td><td><span class="check">&#10003;</span> First-class<div class="detail">drizzle-orm/postgres-js</div></td></tr>
+      <tr data-cat="dx"><td>Open Source</td><td><span class="check">&#10003;</span> Yes<div class="detail">Neon is fully open-source (Apache 2.0)</div></td><td><span class="check">&#10003;</span> Yes<div class="detail">Supabase is open-source (Apache 2.0)</div></td><td><span class="check">&#10003;</span> Yes<div class="detail">libSQL fork of SQLite is open-source</div></td><td><span class="cross">&#10007;</span> No<div class="detail">Proprietary platform</div></td></tr>
+      <tr data-cat="dx"><td>Migration Path</td><td>Standard pg_dump<div class="detail">Standard Postgres — migrate anywhere</div></td><td>Standard pg_dump<div class="detail">Standard Postgres — migrate anywhere</div></td><td>SQLite export<div class="detail">SQLite-compatible but not Postgres — migration requires schema conversion</div></td><td>Standard pg_dump<div class="detail">Standard Postgres — migrate anywhere</div></td></tr>
+    </tbody>
+  </table>
+</div><div class="verdicts">
+  <div class="verdict-card" style="border-color: rgba(0,229,153,0.3);">
+    <h3 style="color: #00e599;">&#9733; Neon / Vercel Postgres</h3>
+    <p>Best fit for Slidey.com Draft. Zero-config Vercel integration, no inactivity deletion, free branching for dev/prod. You only miss built-in auth and real-time — neither needed for a draft board.</p>
+    <div class="use-case"><strong>Best for:</strong> Vercel-deployed apps, seasonal/low-traffic projects, serverless architectures</div>
+  </div>
+  <div class="verdict-card">
+    <h3 style="color: #3ecf8e;">Supabase</h3>
+    <p>Most feature-rich option — auth, real-time, storage, REST APIs all included. But the inactivity deletion on free tier is a dealbreaker for seasonal apps unless you pay $25/mo year-round.</p>
+    <div class="use-case"><strong>Best for:</strong> Apps needing full BaaS (auth + real-time + storage), active daily-use projects</div>
+  </div>
+  <div class="verdict-card">
+    <h3 style="color: #4dc8bf;">Turso</h3>
+    <p>Impressive free tier (5 GB, 500 DBs) with no inactivity risk. Edge-native reads are blazing fast. But SQLite means no easy migration to/from Postgres, and the ecosystem is younger.</p>
+    <div class="use-case"><strong>Best for:</strong> Read-heavy apps, edge performance, projects that won't need Postgres compatibility</div>
+  </div>
+  <div class="verdict-card">
+    <h3 style="color: #c586ff;">Railway</h3>
+    <p>Solid managed Postgres with simple DX, but no real free tier — $5/mo minimum. Good as a secondary option or for apps that already live on Railway's platform.</p>
+    <div class="use-case"><strong>Best for:</strong> Full-stack deploys (app + DB in one platform), teams already on Railway</div>
+  </div>
+</div>
+<div class="footer">
+  <span>Slidey.com Draft &mdash; Database Comparison Matrix v1.0</span>
+  <span>Last updated: April 5, 2026 &bull; Prices and limits subject to change</span>
+</div>
+<script>
+  function filterView(cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    const rows = document.querySelectorAll('#matrix tbody tr');
+    rows.forEach(row => { if (cat === 'all') { row.style.display = ''; } else { const rowCat = row.getAttribute('data-cat'); row.style.display = (rowCat === cat) ? '' : 'none'; } });
+  }
+</script>
+</body>
+</html>
