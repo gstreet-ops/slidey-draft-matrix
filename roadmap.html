@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slidey.com Draft — Feature Roadmap</title>
+<title>Draft Day Challenge — Feature Roadmap</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -369,7 +369,7 @@
 
 <div class="header">
   <div class="header-eyebrow" style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">&#9876;</span> Globe Street Tech — Product Roadmap</div>
-  <h1><span style="color:var(--gtown-highlight)">Slidey.com Draft</span><br>Feature Roadmap</h1>
+  <h1><span style="color:var(--gtown-highlight)">Draft Day Challenge</span><br>Feature Roadmap</h1>
   <p class="header-sub">Everything we're building, organized by phase. Phase 1 ships first. Features can shift between phases as priorities evolve.</p>
   <div class="header-links">
     <a href="index.html">View Competitive Matrix</a>
@@ -411,52 +411,60 @@
 <script>
 const features = [
   // ── Phase 1: Draft Night Core ──
-  { id: 1, title: "Private Draft Pools", description: "Create a pool, get a shareable invite code or link, invite your friends. Each pool has its own leaderboard and settings. Pool announcements and member management included.", phase: 1, status: "complete", priority: "high" },
-  { id: 2, title: "Pre-Draft Mock Submission", description: "Lock in your pick-by-pick predictions before the draft starts. Configurable lock deadline (e.g., 30 min before Round 1). Users can edit right up until the deadline.", phase: 1, status: "complete", priority: "high" },
-  { id: 3, title: "Tiered Scoring Engine", description: "Exact player-to-pick match = max points. Player picked within 3 slots = partial. Correct player in correct round = base points. Admin can customize point weights per pool.", phase: 1, status: "complete", priority: "high" },
-  { id: 4, title: "Live Draft-Night Scoreboard", description: "Scores update in real-time as each pick is announced. Leaderboard reshuffles after every pick. Push-style updates without page refresh — the heartbeat of draft night.", phase: 1, status: "in-progress", priority: "high" },
-  { id: 5, title: "Team Customization", description: "Each user picks their favorite NFL team at signup. The app themes their experience with that team's colors, logo, and branding — from the pick builder to the leaderboard. Team logos and player headshots sourced from ESPN CDN.", phase: 1, status: "planned", priority: "high" },
-  { id: 6, title: "Mock Draft Builder", description: "Full 7-round pick builder with two-column layout: draft board on the left, prospect pool (sorted by BPA) on the right. Inline ESPN-style scouting reports expand below each prospect. Auto-fill by round or all remaining picks.", phase: 1, status: "complete", priority: "high" },
-  { id: 7, title: "ESPN Prospect Data Integration", description: "300+ prospects with scouting reports, grades, combine measurables, position ranks, NFL comparisons, and headshots — all sourced from ESPN's prospect database. Inline expansion shows full detail without leaving the page.", phase: 1, status: "complete", priority: "high" },
-  { id: 8, title: "User Accounts & Auth", description: "Sign up / sign in with email or Google OAuth. User profile stores pool memberships, prediction history, and lifetime stats. Required for pool participation.", phase: 1, status: "complete", priority: "high" },
-  { id: 9, title: "Social Sharing", description: "Share your pool results, final rank, and bragging rights on X, iMessage, or any platform. Auto-generated share cards with your stats and pool branding.", phase: 1, status: "planned", priority: "high" },
+  { id: 1, title: "Private Draft Pools", description: "Create a pool, get a shareable invite code, invite your friends. Each pool has its own leaderboard, settings, announcements, and member management.", phase: 1, status: "complete", priority: "high" },
+  { id: 2, title: "Pre-Draft Mock Submission", description: "Lock in your pick-by-pick predictions before the draft starts. Configurable lock deadline. Users can edit right up until the deadline.", phase: 1, status: "complete", priority: "high" },
+  { id: 3, title: "Tiered Scoring Engine", description: "Three scoring tracks: Mock Bonus (exact 10pts, close 5pts, far 3pts), Live Predictions (10pts correct), and Trivia (5pts correct). Combined score feeds the pool leaderboard.", phase: 1, status: "complete", priority: "high" },
+  { id: 4, title: "Live Draft-Night Scoreboard", description: "Real-time score updates with animated pick announcements, score cascades, leaderboard glow effects, and 'On The Clock' ticker showing previous/current/next picks. Mobile tab navigation.", phase: 1, status: "complete", priority: "high" },
+  { id: 5, title: "Team Customization", description: "Users pick their favorite NFL team during onboarding. The app themes their experience with team colors and logo — accent colors on buttons, nav avatar, score highlights. Changeable in Settings.", phase: 1, status: "complete", priority: "high" },
+  { id: 6, title: "Mock Draft Builder", description: "Full 7-round pick builder with two-column layout: draft board on the left, prospect pool (sorted by BPA) on the right. Inline ESPN-style scouting reports. Auto-fill by round or all remaining picks.", phase: 1, status: "complete", priority: "high" },
+  { id: 7, title: "ESPN Prospect Data Integration", description: "300+ prospects with scouting reports, grades, combine measurables, position ranks, NFL comparisons, headshots, and school logos — all sourced from ESPN.", phase: 1, status: "complete", priority: "high" },
+  { id: 8, title: "User Accounts & Auth", description: "Sign in with Google OAuth. User profile stores pool memberships, prediction history, and favorite team. Required for pool participation.", phase: 1, status: "complete", priority: "high" },
+  { id: 9, title: "Live Pick Predictions", description: "Every user in a pool predicts every NFL pick as it happens. 10pts for correct, 0pts for wrong. Prediction window opens when previous pick is announced. Change your pick before announcement. Auto-skip if no selection.", phase: 1, status: "complete", priority: "high" },
+  { id: 10, title: "Draft Trivia", description: "NFL draft trivia fires between picks — 15 questions across easy/medium/hard difficulties. 5pts per correct answer with a 15-second timer. Categories: draft history, combine, trades, general.", phase: 1, status: "complete", priority: "high" },
+  { id: 11, title: "Pool Teams", description: "Commissioner splits pool members into teams with custom names and colors. Team leaderboard shows combined member scores alongside individual standings.", phase: 1, status: "complete", priority: "high" },
+  { id: 12, title: "Pool Theming", description: "Commissioner sets pool colors that override the default accent on pool pages. User keeps their personal team logo in the nav. Theme layers: app default → user team → pool override.", phase: 1, status: "complete", priority: "high" },
+  { id: 13, title: "On The Clock Ticker", description: "Three-panel display: previous pick (with who called it correctly), current team on the clock, and next team up. Caller badges show 'nailed it!' for exact matches.", phase: 1, status: "complete", priority: "high" },
+  { id: 14, title: "Sound Effects", description: "Draft night audio — pick announced chime, exact match celebration, neutral tick, miss tone, rank up sound. Default on with toggle in header and onboarding preference.", phase: 1, status: "complete", priority: "medium" },
+  { id: 15, title: "User & Commissioner Guides", description: "How to Play guide for users with scoring breakdown and draft night tips. Commissioner guide for pool setup, teams, and theming. Both include copy-to-clipboard invite text.", phase: 1, status: "complete", priority: "high" },
+  { id: 16, title: "Social Sharing", description: "Share your pool results, final rank, and bragging rights on X, iMessage, or any platform. Auto-generated share cards with your stats and pool branding.", phase: 1, status: "planned", priority: "medium" },
 
   // ── Phase 2: Content Platform ──
-  { id: 10, title: "Big Board / Prospect Rankings", description: "300+ prospects ranked with position, school, and projected round. Sortable and filterable by position, school, or projected range. The reference layer for making predictions.", phase: 2, status: "planned", priority: "high" },
-  { id: 11, title: "Scouting Reports", description: "Detailed prospect profiles: strengths, weaknesses, NFL comparison, projected ceiling/floor. Written by Dan and/or aggregated from trusted sources.", phase: 2, status: "planned", priority: "high" },
-  { id: 12, title: "Team Needs & Intel Pages", description: "All 32 teams with current roster needs, cap space, pick inventory, and GM tendencies. Helps users make informed predictions — not just guesses.", phase: 2, status: "planned", priority: "high" },
-  { id: 13, title: "Combine & Measurables Data", description: "40-yard dash, bench press, vertical, broad jump, 3-cone, shuttle — all the combine data in clean sortable tables. Compare prospects side-by-side.", phase: 2, status: "planned", priority: "medium" },
-  { id: 14, title: "Mock Draft Aggregator", description: "Pull in mock drafts from Kiper, McShay, Jeremiah, and other top analysts. Show consensus picks and where analysts diverge. Context for making smarter predictions.", phase: 2, status: "planned", priority: "medium" },
-  { id: 15, title: "Pick Analysis & Notes", description: "Users can add written breakdowns to each pick in their mock draft: why this player, why this team, what the alternatives were. Share your reasoning with your pool.", phase: 2, status: "planned", priority: "high" },
-  { id: 16, title: "Draft Night Live Feed", description: "Live commentary feed during the draft — real-time reactions, surprises, and analysis from your pool as picks happen. Think live blog meets sports group chat.", phase: 2, status: "planned", priority: "medium" },
+  { id: 17, title: "Big Board / Prospect Rankings", description: "300+ prospects ranked with position, school, and projected round. Sortable and filterable by position, school, or projected range. The reference layer for making predictions.", phase: 2, status: "planned", priority: "high" },
+  { id: 18, title: "Scouting Reports", description: "Detailed prospect profiles: strengths, weaknesses, NFL comparison, projected ceiling/floor. Written by Dan and/or aggregated from trusted sources.", phase: 2, status: "planned", priority: "high" },
+  { id: 19, title: "Team Needs & Intel Pages", description: "All 32 teams with current roster needs, cap space, pick inventory, and GM tendencies. Helps users make informed predictions — not just guesses.", phase: 2, status: "planned", priority: "high" },
+  { id: 20, title: "Combine & Measurables Data", description: "40-yard dash, bench press, vertical, broad jump, 3-cone, shuttle — all the combine data in clean sortable tables. Compare prospects side-by-side.", phase: 2, status: "planned", priority: "medium" },
+  { id: 21, title: "Mock Draft Aggregator", description: "Pull in mock drafts from Kiper, McShay, Jeremiah, and other top analysts. Show consensus picks and where analysts diverge.", phase: 2, status: "planned", priority: "medium" },
+  { id: 22, title: "Pick Analysis & Notes", description: "Users can add written breakdowns to each pick in their mock draft: why this player, why this team, what the alternatives were.", phase: 2, status: "planned", priority: "high" },
+  { id: 23, title: "Draft Night Live Feed", description: "Live commentary feed during the draft — real-time reactions, surprises, and analysis from your pool as picks happen.", phase: 2, status: "planned", priority: "medium" },
+  { id: 24, title: "Full Skin Team Theming", description: "Deep team customization: background gradients, nav bar in team colors, team-colored cards, patterns. Beyond the current light-touch accent color approach.", phase: 2, status: "planned", priority: "medium" },
 
   // ── Phase 3: Simulator & Advanced Scoring ──
-  { id: 17, title: "Solo Mock Draft Simulator", description: "Draft against AI-controlled teams. Pick your team, make selections, see how the board falls. A lightweight sim focused on prediction practice rather than full GM mode.", phase: 3, status: "planned", priority: "medium" },
-  { id: 18, title: "7-Round Draft Depth", description: "Simulator covers all 7 rounds with 300+ prospects. Not just a Round 1 toy — users can practice deep-draft strategy and find sleepers.", phase: 3, status: "planned", priority: "medium" },
-  { id: 19, title: "Trade Engine", description: "Trade picks during the simulation using the Jimmy Johnson draft value chart for fairness. Propose trades, get counter-offers from AI GMs, execute multi-pick deals.", phase: 3, status: "planned", priority: "medium" },
-  { id: 20, title: "Pick Grading (A+ to F)", description: "Every pick in the simulator gets an instant letter grade based on prospect value vs. draft position, team need, and positional scarcity.", phase: 3, status: "planned", priority: "low" },
-  { id: 21, title: "Save & Revisit Drafts", description: "Archive completed mock drafts. Review past predictions, compare against what actually happened, track improvement over time.", phase: 3, status: "planned", priority: "low" },
-  { id: 22, title: "Trade Prediction Scoring", description: "Bonus points for predicting draft-day trades. If you call that Team X trades up to pick #4, you earn trade bonus points in your pool.", phase: 3, status: "planned", priority: "medium" },
-  { id: 23, title: "Prop-Style Side Bets", description: "Fun side predictions within your pool: first RB off the board, over/under on QBs in Round 1, which team trades up first. Extra engagement beyond the main picks.", phase: 3, status: "planned", priority: "medium" },
-  { id: 24, title: "Position Rank Scoring", description: "Points for correctly predicting the order positions come off the board — e.g., 1st WR taken is CeeDee Smith. Nobody does this well yet.", phase: 3, status: "planned", priority: "low" },
+  { id: 25, title: "Solo Mock Draft Simulator", description: "Draft against AI-controlled teams. Pick your team, make selections, see how the board falls. Prediction practice mode.", phase: 3, status: "planned", priority: "medium" },
+  { id: 26, title: "7-Round Draft Depth", description: "Simulator covers all 7 rounds with 300+ prospects. Deep-draft strategy and sleeper hunting.", phase: 3, status: "planned", priority: "medium" },
+  { id: 27, title: "Trade Engine", description: "Trade picks during simulation using the Jimmy Johnson draft value chart. Propose trades, get counter-offers from AI GMs.", phase: 3, status: "planned", priority: "medium" },
+  { id: 28, title: "Pick Grading (A+ to F)", description: "Instant letter grade on every pick based on prospect value vs. draft position, team need, and positional scarcity.", phase: 3, status: "planned", priority: "low" },
+  { id: 29, title: "Save & Revisit Drafts", description: "Archive completed mock drafts. Review past predictions, compare against what actually happened.", phase: 3, status: "planned", priority: "low" },
+  { id: 30, title: "Trade Prediction Scoring", description: "Bonus points for predicting draft-day trades. Call that Team X trades up to pick #4 for trade bonus points.", phase: 3, status: "planned", priority: "medium" },
+  { id: 31, title: "Prop-Style Side Bets", description: "Fun side predictions: first RB off the board, over/under on QBs in Round 1, which team trades up first.", phase: 3, status: "planned", priority: "medium" },
+  { id: 32, title: "Position Rank Scoring", description: "Points for correctly predicting the order positions come off the board.", phase: 3, status: "planned", priority: "low" },
 
   // ── Phase 4: Growth & Intelligence ──
-  { id: 25, title: "Historical Accuracy Tracking", description: "Lifetime prediction stats for every user: accuracy by round, by team, by position. Fandom profile that builds over multiple draft years.", phase: 4, status: "planned", priority: "medium" },
-  { id: 26, title: "Pool Year-Over-Year Stats", description: "Track pool-wide prediction accuracy across multiple drafts. See who improves, who stays consistent, and how your pool stacks up over time.", phase: 4, status: "planned", priority: "medium" },
-  { id: 27, title: "AI-Powered Insights", description: "AI-generated analysis: 'Based on combine data and team needs, there's a 73% chance Team X takes a CB in Round 1.' Smart nudges to help users make better predictions.", phase: 4, status: "future", priority: "medium" },
-  { id: 28, title: "Custom Scoring Rules", description: "Pool admins can configure scoring weights: how many points for exact match, partial credit range, trade bonuses. Make every pool unique.", phase: 4, status: "future", priority: "low" },
-  { id: 29, title: "Push Notifications", description: "Real-time alerts on draft night: 'Pick #7 is in — your score just jumped to 2nd place!' Keeps users engaged even if they tab away.", phase: 4, status: "future", priority: "medium" },
-  { id: 30, title: "Printable Pick Sheets", description: "Export your mock or pool results as a clean PDF or CSV. Great for draft parties, office pools, and bragging rights.", phase: 4, status: "future", priority: "low" },
-  { id: 31, title: "Public Contests / Arena", description: "Beyond private pools — open contests where anyone can enter and compete for the global leaderboard. Top predictors get featured.", phase: 4, status: "future", priority: "medium" },
-  { id: 32, title: "Entry Fee / Payout Tracking", description: "Optional buy-in pools with a built-in ledger. Track who paid, calculate payouts based on final standings. No real money processing — just the ledger.", phase: 4, status: "future", priority: "low" },
+  { id: 33, title: "Historical Accuracy Tracking", description: "Lifetime prediction stats: accuracy by round, by team, by position. Fandom profile across multiple draft years.", phase: 4, status: "planned", priority: "medium" },
+  { id: 34, title: "Pool Year-Over-Year Stats", description: "Multi-year pool performance tracking. See who improves and how your pool stacks up.", phase: 4, status: "planned", priority: "medium" },
+  { id: 35, title: "AI-Powered Insights", description: "AI-generated analysis and prediction nudges based on combine data and team needs.", phase: 4, status: "future", priority: "medium" },
+  { id: 36, title: "Custom Scoring Rules", description: "Commissioner-configurable scoring weights: point values for exact match, partial credit, trade bonuses.", phase: 4, status: "future", priority: "low" },
+  { id: 37, title: "Push Notifications", description: "Real-time draft night alerts: pick announcements, score updates, rank changes.", phase: 4, status: "future", priority: "medium" },
+  { id: 38, title: "Printable Pick Sheets", description: "Export mock or pool results as PDF or CSV for draft parties and bragging rights.", phase: 4, status: "future", priority: "low" },
+  { id: 39, title: "Public Contests / Arena", description: "Open contests with global leaderboard. Top predictors get featured.", phase: 4, status: "future", priority: "medium" },
+  { id: 40, title: "Entry Fee / Payout Tracking", description: "Optional buy-in pools with a built-in ledger. Track payments and calculate payouts.", phase: 4, status: "future", priority: "low" },
 
   // ── Phase 5: Future Ideas ──
-  { id: 33, title: "MLB Draft Support", description: "Expand beyond NFL to MLB draft prediction pools. Same pool mechanics, different sport.", phase: 5, status: "future", priority: "low" },
-  { id: 34, title: "Draft-Night Chat & Reactions", description: "In-pool chat during the draft with emoji reactions, GIFs, and trash talk. The group text experience, built into the app.", phase: 5, status: "future", priority: "low" },
-  { id: 35, title: "Streak & Achievement Badges", description: "Gamification layer: 'Called 5 in a row', '3-year pool champion', 'First to submit picks'. Collectible badges on your profile.", phase: 5, status: "future", priority: "low" },
-  { id: 36, title: "Live Multiplayer Draft Rooms", description: "Real-time draft simulation with friends — each person controls a team and drafts simultaneously. The ultimate pre-draft party mode.", phase: 5, status: "future", priority: "low" },
-  { id: 37, title: "Reporter Accountability Cards", description: "Grade media predictions — which insiders actually get their scoops right? Transparency layer inspired by AIMockDraft's approach.", phase: 5, status: "future", priority: "low" },
-  { id: 38, title: "Discussion / Community Boards", description: "In-app forums for prospect debates, trade rumors, and mock draft discussion. Community layer if Slidey grows beyond friend groups.", phase: 5, status: "future", priority: "low" },
+  { id: 41, title: "MLB Draft Support", description: "Expand beyond NFL to MLB draft prediction pools.", phase: 5, status: "future", priority: "low" },
+  { id: 42, title: "Draft-Night Chat & Reactions", description: "In-pool chat with emoji reactions, GIFs, and trash talk during the draft.", phase: 5, status: "future", priority: "low" },
+  { id: 43, title: "Streak & Achievement Badges", description: "Gamification: 'Called 5 in a row', '3-year pool champion', collectible badges.", phase: 5, status: "future", priority: "low" },
+  { id: 44, title: "Live Multiplayer Draft Rooms", description: "Real-time draft simulation — each person controls a team and drafts simultaneously.", phase: 5, status: "future", priority: "low" },
+  { id: 45, title: "Reporter Accountability Cards", description: "Grade media predictions — which insiders actually get their scoops right?", phase: 5, status: "future", priority: "low" },
+  { id: 46, title: "Discussion / Community Boards", description: "Forums for prospect debates, trade rumors, and mock draft discussion.", phase: 5, status: "future", priority: "low" },
 ];
 
 const phaseNames = {
@@ -468,8 +476,8 @@ const phaseNames = {
 };
 
 const phaseDescriptions = {
-  1: "The MVP — everything needed for draft night with your friends",
-  2: "The editorial stack that makes Slidey a destination, not just a game",
+  1: "Draft night core — live predictions, trivia, teams, and scoring",
+  2: "Content platform that makes Draft Day Challenge a destination",
   3: "Mock draft simulator and advanced prediction mechanics",
   4: "Analytics, AI, and features that grow the platform",
   5: "Wish list — things we might build as the community grows"
