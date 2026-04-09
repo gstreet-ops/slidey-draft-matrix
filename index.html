@@ -323,10 +323,9 @@
     <span style="font-size:16px">&#9876;</span> Globe Street Tech — Product Research
   </div>
   <h1><span style="color:var(--gtown-highlight)">Slidey.com Draft</span><br>Competitive Feature Matrix</h1>
-  <p class="header-sub">Mapping Slidey.com Draft's planned feature set against 8 existing platforms. The highlighted column shows what we're building — including the exclusive Dan's Picks analyst prediction tracker.</p>
+  <p class="header-sub">Mapping Slidey.com Draft's planned feature set against 8 existing platforms. The highlighted column shows what we're building — pools, scoring, live tracking, team customization, and a full content platform.</p>
   <div style="margin-top:12px;font-size:13px;display:flex;gap:10px;flex-wrap:wrap;">
     <a href="roadmap" style="color:var(--slidey);text-decoration:none;border:1px solid var(--slidey);padding:6px 16px;border-radius:6px;transition:all 0.2s;display:inline-block;">View Feature Roadmap &rarr;</a>
-    <a href="dans-studio" style="color:var(--accent);text-decoration:none;border:1px solid var(--accent);padding:6px 16px;border-radius:6px;transition:all 0.2s;display:inline-block;">Dan's Picks Studio &rarr;</a>
   </div>
 </div>
 
@@ -343,7 +342,7 @@
   <button class="filter-btn active" onclick="filterRows('all')">All Features</button>
   <button class="filter-btn" onclick="filterRows('social')">Social & Compete</button>
   <button class="filter-btn" onclick="filterRows('prediction')">Prediction & Scoring</button>
-  <button class="filter-btn slidey-filter" onclick="filterRows('dans')">Dan's Picks</button>
+  <button class="filter-btn slidey-filter" onclick="filterRows('team')">Team Customization</button>
   <button class="filter-btn" onclick="filterRows('sim')">Simulator & GM</button>
   <button class="filter-btn" onclick="filterRows('content')">Content & Intel</button>
   <button class="filter-btn" onclick="filterRows('ux')">UX & Platform</button>
@@ -557,10 +556,10 @@
     <td><span class="no">&mdash;</span></td>
   </tr>
 
-  <!-- DAN'S PICKS -->
-  <tr class="cat-row-slidey"><td colspan="10" data-cat="dans">Dan's Picks — Analyst Prediction Tracker (Slidey Exclusive)</td></tr>
-  <tr data-cat="dans">
-    <td>Dan's pre-draft predictions<span class="feature-note">Published pick-by-pick mock before draft</span></td>
+  <!-- TEAM CUSTOMIZATION -->
+  <tr class="cat-row-slidey"><td colspan="10" data-cat="team">Team Customization (Slidey Exclusive)</td></tr>
+  <tr data-cat="team">
+    <td>Favorite team selection<span class="feature-note">Pick your NFL team at signup</span></td>
     <td class="slidey-col"><span class="planned">PLANNED</span></td>
     <td class="highlight"><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
@@ -571,8 +570,8 @@
     <td><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
   </tr>
-  <tr data-cat="dans">
-    <td>Dan's analysis per pick<span class="feature-note">Written rationale for each selection</span></td>
+  <tr data-cat="team">
+    <td>Team-themed UI<span class="feature-note">Colors, logo, and branding match your team</span></td>
     <td class="slidey-col"><span class="planned">PLANNED</span></td>
     <td class="highlight"><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
@@ -583,8 +582,20 @@
     <td><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
   </tr>
-  <tr data-cat="dans">
-    <td>Live accuracy scoreboard<span class="feature-note">Dan's score updates in real-time during draft</span></td>
+  <tr data-cat="team">
+    <td>Team-specific draft intel<span class="feature-note">Needs, cap, pick inventory for your team</span></td>
+    <td class="slidey-col"><span class="planned">PLANNED</span></td>
+    <td class="highlight"><span class="partial">Generic</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="partial">Generic</span></td>
+    <td><span class="no">&mdash;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="yes">&#10004;</span></td>
+    <td><span class="partial">Basic</span></td>
+    <td><span class="yes">&#10004;</span></td>
+  </tr>
+  <tr data-cat="team">
+    <td>Pick analysis & notes<span class="feature-note">Add written rationale to each mock pick</span></td>
     <td class="slidey-col"><span class="planned">PLANNED</span></td>
     <td class="highlight"><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
@@ -595,8 +606,8 @@
     <td><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
   </tr>
-  <tr data-cat="dans">
-    <td>Beat Dan challenge<span class="feature-note">Users compete head-to-head vs. Dan's picks</span></td>
+  <tr data-cat="team">
+    <td>Confidence ratings per pick<span class="feature-note">Lock / likely / sleeper tiers</span></td>
     <td class="slidey-col"><span class="planned">PLANNED</span></td>
     <td class="highlight"><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
@@ -607,44 +618,8 @@
     <td><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
   </tr>
-  <tr data-cat="dans">
-    <td>Pick-by-pick hit/miss tracker<span class="feature-note">Visual hit/miss as each real pick is announced</span></td>
-    <td class="slidey-col"><span class="planned">PLANNED</span></td>
-    <td class="highlight"><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-  </tr>
-  <tr data-cat="dans">
-    <td>Dan's confidence ratings<span class="feature-note">Lock / likely / sleeper tiers per pick</span></td>
-    <td class="slidey-col"><span class="planned">PLANNED</span></td>
-    <td class="highlight"><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-  </tr>
-  <tr data-cat="dans">
-    <td>Historical year-over-year stats<span class="feature-note">Dan's accuracy across multiple drafts</span></td>
-    <td class="slidey-col"><span class="planned">PLANNED</span></td>
-    <td class="highlight"><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-    <td><span class="no">&mdash;</span></td>
-  </tr>
-  <tr data-cat="dans">
-    <td>Dan's hot takes / commentary feed<span class="feature-note">Live reactions during the draft</span></td>
+  <tr data-cat="team">
+    <td>Draft night live feed<span class="feature-note">Real-time reactions from your pool</span></td>
     <td class="slidey-col"><span class="planned">PLANNED</span></td>
     <td class="highlight"><span class="no">&mdash;</span></td>
     <td><span class="no">&mdash;</span></td>
@@ -938,10 +913,10 @@
   <div class="summary-grid">
 
     <div class="summary-card slidey-card">
-      <h3>Dan's Picks — The Exclusive Edge</h3>
-      <p>No competitor offers a built-in analyst prediction tracker with live scoring. Dan's Picks gives Slidey a content moat: users follow Dan's analysis pre-draft, then watch his accuracy unfold in real-time on draft night. The "Beat Dan" challenge turns passive readers into engaged competitors.</p>
+      <h3>Team Customization — The Personal Touch</h3>
+      <p>No competitor lets users fully theme their experience around their favorite NFL team. From pick builder to leaderboard, Slidey wraps the entire UX in your team's colors, logo, and branding — making the draft feel personal. Combined with pick notes, confidence ratings, and a live pool feed, it creates a uniquely engaging experience.</p>
       <span class="tag tag-orange">Exclusive</span>
-      <span class="tag tag-orange">Content moat</span>
+      <span class="tag tag-orange">Personalization</span>
       <span class="tag tag-orange">Engagement driver</span>
     </div>
 
@@ -953,11 +928,11 @@
 
     <div class="summary-card">
       <h3>Must-Have Features (MVP)</h3>
-      <p>Private pools with invite codes, pre-draft mock submission with lock deadline, tiered scoring engine, live draft-night scoreboard, Dan's Picks analyst tracker, and social sharing of results.</p>
+      <p>Private pools with invite codes, pre-draft mock submission with lock deadline, tiered scoring engine, live draft-night scoreboard, team customization, and social sharing of results.</p>
       <span class="tag tag-green">Pool system</span>
       <span class="tag tag-green">Scoring engine</span>
       <span class="tag tag-green">Live tracker</span>
-      <span class="tag tag-orange">Dan's Picks</span>
+      <span class="tag tag-orange">Team themes</span>
     </div>
 
     <div class="summary-card">
@@ -979,7 +954,7 @@
 
     <div class="summary-card">
       <h3>Differentiators to Consider</h3>
-      <p>Trade prediction bonuses (MockOut's 20pt bonus is compelling), prop-style side bets, position-rank scoring (nobody does this well), AI-powered analysis, and year-over-year accuracy profiles for both users and Dan.</p>
+      <p>Trade prediction bonuses (MockOut's 20pt bonus is compelling), prop-style side bets, position-rank scoring (nobody does this well), AI-powered analysis, and year-over-year accuracy profiles for users and pools.</p>
       <span class="tag tag-yellow">Trade bonuses</span>
       <span class="tag tag-yellow">Prop bets</span>
       <span class="tag tag-purple">AI-powered</span>
