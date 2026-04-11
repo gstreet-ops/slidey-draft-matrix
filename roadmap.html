@@ -371,6 +371,7 @@
   <div class="header-eyebrow" style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">&#9876;</span> Globe Street Tech — Product Roadmap</div>
   <h1><span style="color:var(--gtown-highlight)">Draft Day Challenge</span><br>Feature Roadmap</h1>
   <p class="header-sub">Everything we're building, organized by phase. Phase 1 ships first. Features can shift between phases as priorities evolve.</p>
+  <div id="draftCountdown" style="margin-top:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px"></div>
   <div class="header-links">
     <a href="index.html">View Competitive Matrix</a>
   </div>
@@ -410,33 +411,45 @@
 
 <script>
 const features = [
-  // ── Phase 1: Draft Night Core ──
+  // ── Phase 1: Draft Night Core (complete) ──
   { id: 1, title: "Private Draft Pools", description: "Create a pool, get a shareable invite code, invite your friends. Each pool has its own leaderboard, settings, announcements, and member management.", phase: 1, status: "complete", priority: "high" },
   { id: 2, title: "Pre-Draft Mock Submission", description: "Lock in your pick-by-pick predictions before the draft starts. Configurable lock deadline. Users can edit right up until the deadline.", phase: 1, status: "complete", priority: "high" },
-  { id: 3, title: "Tiered Scoring Engine", description: "Three scoring tracks: Mock Bonus (exact 10pts, close 5pts, far 3pts), Live Predictions (10pts correct), and Trivia (5pts correct). Combined score feeds the pool leaderboard.", phase: 1, status: "complete", priority: "high" },
+  { id: 3, title: "Tiered Scoring Engine", description: "Three scoring tracks: Mock Bonus (Player Called 3pts + Range Close 2pts + Range Far 1pts + Exact Slot 5pts + Position Match 1pt), Live Predictions (10pts correct), and Trivia (Easy 3pts, Medium 5pts, Hard 10pts). Combined score feeds the pool leaderboard. Pools can use Standard Scoring (locked defaults) or Custom Scoring (commissioner sets values).", phase: 1, status: "complete", priority: "high" },
   { id: 4, title: "Live Draft-Night Scoreboard", description: "Real-time score updates with animated pick announcements, score cascades, leaderboard glow effects, and 'On The Clock' ticker showing previous/current/next picks. Mobile tab navigation.", phase: 1, status: "complete", priority: "high" },
   { id: 5, title: "Team Customization", description: "Users pick their favorite NFL team during onboarding. The app themes their experience with team colors and logo — accent colors on buttons, nav avatar, score highlights. Changeable in Settings.", phase: 1, status: "complete", priority: "high" },
   { id: 6, title: "Mock Draft Builder", description: "Full 7-round pick builder with two-column layout: draft board on the left, prospect pool (sorted by BPA) on the right. Inline ESPN-style scouting reports. Auto-fill by round or all remaining picks.", phase: 1, status: "complete", priority: "high" },
   { id: 7, title: "ESPN Prospect Data Integration", description: "300+ prospects with scouting reports, grades, combine measurables, position ranks, NFL comparisons, headshots, and school logos — all sourced from ESPN.", phase: 1, status: "complete", priority: "high" },
   { id: 8, title: "User Accounts & Auth", description: "Sign in with Google OAuth. User profile stores pool memberships, prediction history, and favorite team. Required for pool participation.", phase: 1, status: "complete", priority: "high" },
   { id: 9, title: "Live Pick Predictions", description: "Every user in a pool predicts every NFL pick as it happens. 10pts for correct, 0pts for wrong. Prediction window opens when previous pick is announced. Change your pick before announcement. Auto-skip if no selection.", phase: 1, status: "complete", priority: "high" },
-  { id: 10, title: "Draft Trivia", description: "NFL draft trivia fires between picks — 15 questions across easy/medium/hard difficulties. 5pts per correct answer with a 15-second timer. Categories: draft history, combine, trades, general.", phase: 1, status: "complete", priority: "high" },
+  { id: 10, title: "Draft Trivia", description: "50+ NFL draft trivia questions fire between picks — Easy (3pts, green), Medium (5pts, yellow), Hard (10pts, red). Categories: draft history, combine, trades, prospects, general NFL. Answer before the next pick is announced. Wrong answers earn 0 points.", phase: 1, status: "complete", priority: "high" },
   { id: 11, title: "Pool Teams", description: "Commissioner splits pool members into teams with custom names and colors. Team leaderboard shows combined member scores alongside individual standings.", phase: 1, status: "complete", priority: "high" },
   { id: 12, title: "Pool Theming", description: "Commissioner sets pool colors that override the default accent on pool pages. User keeps their personal team logo in the nav. Theme layers: app default → user team → pool override.", phase: 1, status: "complete", priority: "high" },
   { id: 13, title: "On The Clock Ticker", description: "Three-panel display: previous pick (with who called it correctly), current team on the clock, and next team up. Caller badges show 'nailed it!' for exact matches.", phase: 1, status: "complete", priority: "high" },
-  { id: 14, title: "Sound Effects", description: "Draft night audio — pick announced chime, exact match celebration, neutral tick, miss tone, rank up sound. Default on with toggle in header and onboarding preference.", phase: 1, status: "complete", priority: "medium" },
-  { id: 15, title: "User & Commissioner Guides", description: "How to Play guide for users with scoring breakdown and draft night tips. Commissioner guide for pool setup, teams, and theming. Both include copy-to-clipboard invite text.", phase: 1, status: "complete", priority: "high" },
+  { id: 15, title: "User & Commissioner Guides", description: "How to Play guide with scoring overview and draft night tips. Dedicated /scoring page with full breakdowns, worked examples for all three tracks, and reference tables. Commissioner guide for pool setup, teams, scoring mode, and theming.", phase: 1, status: "complete", priority: "high" },
   { id: 16, title: "Floating Video Chat", description: "Draggable Jitsi-powered video widget for draft night watch parties. Picture-in-picture style — floats over the war room, snaps to corners, minimizes to a pill with audio still live. Per-pool rooms auto-created.", phase: 1, status: "complete", priority: "high" },
+  { id: 36, title: "Custom Scoring Rules", description: "Standard vs Custom scoring toggle per pool. Standard Scoring locks all point values to official defaults (blue badge). Custom Scoring lets commissioners set their own values (amber badge). Standard pools eligible for future cross-pool comparison. Confirmation dialogs when switching modes.", phase: 1, status: "complete", priority: "high" },
+  { id: 42, title: "Draft-Night Chat & Reactions", description: "In-pool chat with commissioner badges, spectator read-only, auto-scroll, and 5-second polling. Ships with pool dashboard. Rich features (GIFs, reactions, @mentions, pinned messages) are post-draft.", phase: 1, status: "complete", priority: "high" },
+  { id: 47, title: "Spectator Gating & Invite System", description: "New users sign in as spectators — browse the site, view Big Board and mock drafts, but cannot create content or join pools. Enter an app invite code to upgrade to active status. Two-tier invite system: app invites (activate account) and pool invites (join a specific pool).", phase: 1, status: "complete", priority: "high" },
+  { id: 48, title: "Unified Navigation & Footer", description: "SiteNav component with primary links (Big Board, My Board/War Room, Pools) and More dropdown (Mock Drafts, Dashboard, How to Play, Scoring, Sign In). User team logo in nav. Mobile hamburger menu. Consistent SiteFooter across all pages.", phase: 1, status: "complete", priority: "high" },
+  { id: 49, title: "Home Page Redesign", description: "Onboarding-first layout: How It Works strip explaining the three scoring tracks, prominent invite CTA section, 2-column layout with draft content and sidebar stats, draft countdown pill badge in hero section.", phase: 1, status: "complete", priority: "high" },
+  { id: 50, title: "ESPN Live Draft API", description: "Real-time ESPN draft data polling every 30 seconds during the draft. Automatic pick detection, player matching with position alias mapping (CB/DB, EDGE/DE, OT/T), and score recalculation on each new pick. Admin manual entry as fallback if ESPN API fails.", phase: 1, status: "complete", priority: "high" },
+  { id: 51, title: "BPA Auto-Fill", description: "Empty slots in mock drafts auto-fill with ESPN Best Player Available rankings when mocks lock at the deadline. Users who partially complete their mock still get scored on every pick.", phase: 1, status: "complete", priority: "medium" },
+  { id: 52, title: "Admin Studio", description: "Admin panel for managing users, viewing all pools with invite links, generating app invite codes, monitoring draft sync status, and manual pick entry fallback. Role-gated to admin users only.", phase: 1, status: "complete", priority: "high" },
+  { id: 14, title: "Sound Effects", description: "Draft night audio — pick announced chime, exact match celebration, neutral tick, miss tone, rank up sound. Default on with toggle in header and onboarding preference.", phase: 1, status: "complete", priority: "medium" },
+  // Phase 1 in-progress
+  { id: 53, title: "Dedicated Scoring Page", description: "Full /scoring page with worked examples for all three tracks — Mock Draft Bonus, Live Predictions, and Trivia. Nav pills linking to each section. Visual formula showing how Combined Score is calculated. Reference tables for Standard Scoring defaults. Commissioner Controls section explaining Standard vs Custom modes.", phase: 1, status: "in-progress", priority: "high" },
+  { id: 54, title: "Tiered Trivia Scoring", description: "Trivia points vary by question difficulty: Easy (3pts), Medium (5pts), Hard (10pts). Pool settings store tiered values. Scoring engine reads difficulty from each question and awards the corresponding tier value.", phase: 1, status: "in-progress", priority: "high" },
+  // Phase 1 planned
   { id: 17, title: "Social Sharing", description: "Share your pool results, final rank, and bragging rights on X, iMessage, or any platform. Auto-generated share cards with your stats and pool branding.", phase: 1, status: "planned", priority: "medium" },
 
   // ── Phase 2: Content Platform ──
-  { id: 17, title: "Big Board / Prospect Rankings", description: "300+ prospects ranked with position, school, and projected round. Sortable and filterable by position, school, or projected range. The reference layer for making predictions.", phase: 2, status: "planned", priority: "high" },
-  { id: 18, title: "Scouting Reports", description: "Detailed prospect profiles: strengths, weaknesses, NFL comparison, projected ceiling/floor. Written by Dan and/or aggregated from trusted sources.", phase: 2, status: "planned", priority: "high" },
+  { id: 55, title: "Big Board / Prospect Rankings", description: "Searchable, filterable prospect rankings with 300+ players. Position filters, school logos, headshots, ESPN grades, trait tags. Click any prospect to open a full scouting drawer with strengths, weaknesses, NFL comparison, and measurables.", phase: 2, status: "complete", priority: "high" },
+  { id: 18, title: "Scouting Reports", description: "Detailed scouting reports integrated into the Big Board drawer — strengths, weaknesses, NFL player comparison, projected ceiling/floor, combine measurables, school and conference info. Sourced from ESPN prospect data.", phase: 2, status: "complete", priority: "high" },
+  { id: 20, title: "Combine & Measurables Data", description: "Combine measurables (40-yard, bench, vertical, broad jump, 3-cone, shuttle) displayed in prospect scouting drawers on the Big Board. Data sourced from ESPN.", phase: 2, status: "complete", priority: "medium" },
+  { id: 23, title: "Draft Night Live Feed", description: "Live pool chat during the draft — 5-second polling, auto-scroll, message deduplication, commissioner badge, spectator read-only mode. Sidebar on desktop, stacked below on mobile.", phase: 2, status: "complete", priority: "medium" },
   { id: 19, title: "Team Needs & Intel Pages", description: "All 32 teams with current roster needs, cap space, pick inventory, and GM tendencies. Helps users make informed predictions — not just guesses.", phase: 2, status: "planned", priority: "high" },
-  { id: 20, title: "Combine & Measurables Data", description: "40-yard dash, bench press, vertical, broad jump, 3-cone, shuttle — all the combine data in clean sortable tables. Compare prospects side-by-side.", phase: 2, status: "planned", priority: "medium" },
   { id: 21, title: "Mock Draft Aggregator", description: "Pull in mock drafts from Kiper, McShay, Jeremiah, and other top analysts. Show consensus picks and where analysts diverge.", phase: 2, status: "planned", priority: "medium" },
   { id: 22, title: "Pick Analysis & Notes", description: "Users can add written breakdowns to each pick in their mock draft: why this player, why this team, what the alternatives were.", phase: 2, status: "planned", priority: "high" },
-  { id: 23, title: "Draft Night Live Feed", description: "Live commentary feed during the draft — real-time reactions, surprises, and analysis from your pool as picks happen.", phase: 2, status: "planned", priority: "medium" },
   { id: 24, title: "Full Skin Team Theming", description: "Deep team customization: background gradients, nav bar in team colors, team-colored cards, patterns. Beyond the current light-touch accent color approach.", phase: 2, status: "planned", priority: "medium" },
 
   // ── Phase 3: Simulator & Advanced Scoring ──
@@ -453,7 +466,6 @@ const features = [
   { id: 33, title: "Historical Accuracy Tracking", description: "Lifetime prediction stats: accuracy by round, by team, by position. Fandom profile across multiple draft years.", phase: 4, status: "planned", priority: "medium" },
   { id: 34, title: "Pool Year-Over-Year Stats", description: "Multi-year pool performance tracking. See who improves and how your pool stacks up.", phase: 4, status: "planned", priority: "medium" },
   { id: 35, title: "AI-Powered Insights", description: "AI-generated analysis and prediction nudges based on combine data and team needs.", phase: 4, status: "future", priority: "medium" },
-  { id: 36, title: "Custom Scoring Rules", description: "Commissioner-configurable scoring weights: point values for exact match, partial credit, trade bonuses.", phase: 4, status: "future", priority: "low" },
   { id: 37, title: "Push Notifications", description: "Real-time draft night alerts: pick announcements, score updates, rank changes.", phase: 4, status: "future", priority: "medium" },
   { id: 38, title: "Printable Pick Sheets", description: "Export mock or pool results as PDF or CSV for draft parties and bragging rights.", phase: 4, status: "future", priority: "low" },
   { id: 39, title: "Public Contests / Arena", description: "Open contests with global leaderboard. Top predictors get featured.", phase: 4, status: "future", priority: "medium" },
@@ -461,7 +473,6 @@ const features = [
 
   // ── Phase 5: Future Ideas ──
   { id: 41, title: "MLB Draft Support", description: "Expand beyond NFL to MLB draft prediction pools.", phase: 5, status: "future", priority: "low" },
-  { id: 42, title: "Draft-Night Chat & Reactions", description: "In-pool chat with emoji reactions, GIFs, and trash talk during the draft.", phase: 5, status: "future", priority: "low" },
   { id: 43, title: "Streak & Achievement Badges", description: "Gamification: 'Called 5 in a row', '3-year pool champion', collectible badges.", phase: 5, status: "future", priority: "low" },
   { id: 44, title: "Live Multiplayer Draft Rooms", description: "Real-time draft simulation — each person controls a team and drafts simultaneously.", phase: 5, status: "future", priority: "low" },
   { id: 45, title: "Reporter Accountability Cards", description: "Grade media predictions — which insiders actually get their scoops right?", phase: 5, status: "future", priority: "low" },
@@ -477,8 +488,8 @@ const phaseNames = {
 };
 
 const phaseDescriptions = {
-  1: "Draft night core — live predictions, trivia, teams, and scoring",
-  2: "Content platform that makes Draft Day Challenge a destination",
+  1: "Live on slidey-draft.vercel.app — draft night experience, pools, scoring, trivia, and social features",
+  2: "Content platform — prospect data, scouting reports, and research tools",
   3: "Mock draft simulator and advanced prediction mechanics",
   4: "Analytics, AI, and features that grow the platform",
   5: "Wish list — things we might build as the community grows"
@@ -547,6 +558,19 @@ function filterCards(status) {
   event.target.classList.add('active');
   render(status);
 }
+
+// Draft countdown
+(function() {
+  const draftDate = new Date('2026-04-23T20:00:00-04:00');
+  const now = new Date();
+  const el = document.getElementById('draftCountdown');
+  if (now > draftDate) {
+    el.innerHTML = '<span style="color:var(--green)">&#127944; Draft Day is HERE!</span>';
+  } else {
+    const days = Math.ceil((draftDate - now) / (1000 * 60 * 60 * 24));
+    el.innerHTML = `<span style="color:var(--yellow)">&#127944; NFL Draft Round 1: April 23, 2026 — ${days} day${days !== 1 ? 's' : ''} away</span>`;
+  }
+})();
 
 render();
 </script>
